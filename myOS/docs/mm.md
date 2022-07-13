@@ -74,7 +74,7 @@ CPL不总是等于DPL。
 逻辑地址的长度为48位，由一个16位的段选择器（Segment Selector）以及32位的段内偏移构成。
 段选择器不是GDT内的偏移。
 * 寻址流程的伪代码为：
-getLinearAddr(logic_addr):
+	getLinearAddr(logic_addr):
 	ss, offset = logic_addr
 	index, ti, rpl = ss
 	table = []
@@ -92,8 +92,8 @@ getLinearAddr(logic_addr):
 段选择器（SS，Segment Selector）
 ===========================
 * 16位的段选择器内容如下：
-[ 3-15位]: Index，段的索引，表示第几个SD（段描述符，SD, Segment Descriptor），就像数组操作，范围为0-8191，代表GDT中8192个SD；64*1024/8=8192；第一个SD（索引为0）是一个空的SD，若使用这个SD寻址，CPU将产生一个GP（General Protection）异常，直接导致Triple Fault。
-[    2位]: TI，表指示器（Table Indicator）；
+	[ 3-15位]: Index，段的索引，表示第几个SD（段描述符，SD, Segment Descriptor），就像数组操作，范围为0-8191，代表GDT中8192个SD；64*1024/8=8192；第一个SD（索引为0）是一个空的SD，若使用这个SD寻址，CPU将产生一个GP（General Protection）异常，直接导致Triple Fault。
+	[    2位]: TI，表指示器（Table Indicator）；
 	TI=0，这个段描述符在GDT里；
 	TI=1，这个段描述符在LDT里；（用得少）
 [ 0- 1位]: RPL，请求权限级，段选择器的权限，RPL=CPL；
@@ -101,7 +101,7 @@ getLinearAddr(logic_addr):
 	RPL=01，Ring1；
 	RPL=10，Ring2；
 	RPL=11，Ring3；
-	
+
 
 注意事项
 ============================
@@ -112,3 +112,19 @@ CS，ES，SS，DS
 * 保护模式下赠送的两个段寄存器：
 FS，GS
 
+
+
+分页
+====
+
+* 分页在保护模式下才开启
+* 分页默认不启用
+* 通过设置CR0寄存器的PG位可以开启分页
+* 有三种分页模式
+  1. 32位分页
+  2. PAE分页
+  3. 4层分页（用于IA--32e模式）
+* 在这种模式下
+  * 32位线性地址
+  * 40位物理地址（与PSE，Page Size Extension有关系）
+  * 每页大小可以是4KB或者4MB
