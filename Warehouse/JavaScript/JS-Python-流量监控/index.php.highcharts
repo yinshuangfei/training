@@ -1,0 +1,134 @@
+<title>天玥系列磁盘阵列控制台</title>
+<script type="text/javascript" src="assets/js/jquery1x.min.js"></script>
+<link rel="stylesheet" href="assets/css/jquery-ui.min.css" />
+
+<script src="assets/js/highCharts/highcharts.js"></script>
+<script src="assets/js/highCharts/highcharts-zh_CN.js"></script>
+<script src="assets/js/highCharts/exporting.js"></script>
+<script src="assets/js/highCharts/oldie.js"></script>
+
+
+<div class="row" id="test_fc">
+    <div class="col-xs-12">
+		<div class="table-header">当周流量统计</div>
+        <div id="containerIpR" style="width: 800px; height: 400px; float: left; "></div>
+    </div>
+</div>
+
+<?php
+shell_exec("/usr/bin/python3 config/traffic/update.py 2>& 1")
+?>
+
+<script>
+
+var chart = null;
+
+$.getJSON('config/traffic/data.json',function (data) {
+		
+    chart = Highcharts.chart('containerIpR', {
+        chart: {
+            zoomType: 'x',
+            type:'spline',
+            animation: Highcharts.svg,
+        },
+        title: {
+            text: 'IP READ'
+        },
+        subtitle: {
+            text: document.ontouchstart === undefined ?
+            '鼠标拖动可以进行缩放' : '手势操作进行缩放'
+        },
+        xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                // millisecond: '%H:%M:%S.%L',
+                // second: '%H:%M:%S',
+                minute: '%H:%M',
+                hour: '%H:%M',
+                day: '%m-%d',
+                week: '%m-%d',
+                month: '%Y-%m',
+                year: '%Y'
+            }
+        },
+        yAxis: {
+            title: {
+                text: '流量'
+            }
+        },
+        tooltip: {
+            dateTimeLabelFormats: {
+                millisecond: '%H:%M:%S.%L',
+                second: '%H:%M:%S',
+                minute: '%H:%M',
+                hour: '%H:%M',
+                day: '%Y-%m-%d',
+                week: '%m-%d',
+                month: '%Y-%m',
+                year: '%Y'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, new Highcharts.getOptions().colors[0]],
+                        [1, new Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
+        series: [{
+            type: 'area',
+            name: 'MB/s',
+            data: data
+        }]
+    });
+
+    function requestData( ) {
+        $.ajax({
+            url: 'config/traffic/update_point.php',
+            success: function (point) {
+                var series = chart.series[0];
+
+                if ( point.trim() == ""){
+                    console.log("null");
+                }else{
+                    // 当数据点数量超过 20 个，则指定删除第一个点
+                    shift = series.data.length > 20; 
+                    chart.series[0].addPoint(JSON.parse(point), true, shift);
+                }
+
+                setTimeout(requestData, 3000);
+            },
+            error: function () {
+                console.log("Failed get the update data.");
+            },
+            cache: false,
+        });
+    }
+
+    requestData();
+});
+
+</script>
+

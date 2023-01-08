@@ -1,0 +1,5 @@
+#!/bin/bash
+
+gcc magic_packet.c -o lan.out
+
+./lan.out

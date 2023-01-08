@@ -1,0 +1,9 @@
+[Unit]
+Description=Example systemd interactive simple tty service
+
+[Service]
+ExecStart=/bin/bash /root/code/boot_test/param.sh %%n=%n= %%N=%N= %%p=%p= %%P=%P= %%i=%i= %%I=%I= %%f=%f= %%c=%c= %%r=%r= %%R=%R= %%t=%t= %%u=%u= %%U=%U= %%h=%h= %%s=%s= %%m=%m= %%b=%b= %%H=%H= %%v=%v= %%%%=%%= 
+Type=simple
+
+[Install]
+WantedBy=default.target

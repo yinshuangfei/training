@@ -1,0 +1,2 @@
+insmod hello.ko
+cat /var/log/syslog | grep YSF

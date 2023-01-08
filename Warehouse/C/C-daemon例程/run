@@ -1,0 +1,3 @@
+#!/bin/bash
+gcc -c init_daemon.c
+gcc -o init_daemond init_daemon.o

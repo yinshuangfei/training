@@ -1,0 +1,16 @@
+.SH Sample
+sec 1
+
+.P
+sec 2
+
+.IP *
+1
+2
+3
+
+.TP
+sec 3
+
+.SS
+end

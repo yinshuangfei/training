@@ -1,0 +1,10 @@
+*.pyc
+*.o
+*.ko
+*.mod.o
+*.mod.c
+*.order
+*.symvers
+a.out
+__pycache__
+

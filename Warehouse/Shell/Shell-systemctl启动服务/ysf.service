@@ -1,0 +1,11 @@
+[Unit]
+Description=This is a handsome software.
+Wants=network.target
+
+[Service]
+ExecStart=/root/ysf/run.sh start 
+ExecStop=/root/ysf/run.sh stop
+
+[Install]
+#多用户
+WantedBy=multi-user.target

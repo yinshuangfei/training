@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <style>
+            /* 时间展示样式 */
+            #in1{
+                width: 400px;
+                height: 60px;
+                font-size: 26px;
+                font-weight: bloder;
+                line-height: 30px;
+                border: none;
+            }
+        </style>
+        <title>index</title>
+    </head>
+    <body>
+        <!-- 标题 -->
+        <h1>欢迎访问简易版Web框架主页</h1>
+        <!-- 动态替换(模板渲染), 刷新页面动态刷新 -->
+        <h2>@</h2>
+        <input type="text" id="in1"/>
+        <!-- 认证表单 -->
+        <form action="http://127.0.0.1:9001/auth/" method="post">
+            <label for="username">用户名</label>
+            <input type="text" id="username" name="username"/>
+            <label for="password">密码</label>
+            <input type="password" id="password" name="password"/>
+            <input type="submit">
+        </form>
+        <script>
+            var item;
+
+            function f(){
+                var time = new Date();
+                var year = time.getFullYear();
+                var month = time.getMonth() + 1;
+                var date = time.getDate();
+                var hours = time.getHours();
+                var minutes = time.getMinutes();
+                var seconds = time.getSeconds();
+
+                // 月份与日期的显示为两位数字如01月01日
+                if(month < 10 ){
+                    month = "0" + month;
+                }
+                if(date < 10 ){
+                    date = "0" + date;
+                }
+
+                // 时间拼接
+                var dateTime = year + "年" + month + "月" + date + "日" + hours + "时" + minutes + "分" + seconds + "秒";
+                var inputEle = document.getElementById("in1");
+                inputEle.value = dateTime;
+            }
+
+            function start(){
+                f();
+                item = setInterval(f, 1000);
+            }
+            start()
+            </script>
+    </body>    
+</html>

@@ -1,0 +1,3 @@
+insmod hello.ko
+cat /var/log/syslog | grep YSF
+mknod /dev/ysf_dev c 123 0

@@ -1,0 +1,5 @@
+# yum
+yum install libevent-devel
+
+# deb
+apt install libevent-dev

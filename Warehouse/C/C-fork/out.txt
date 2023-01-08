@@ -1,0 +1,6 @@
+i am the parent process, my process id is 184025
+我是孩子他爹
+i am the child process, my process id is 184026 
+我是爹的儿子
+统计结果是: 1,我是184026
+统计结果是: 1,我是184025

@@ -1,0 +1,2 @@
+This is a demo for using cmake tool. 
+Writing by YSF.

@@ -1,0 +1,16 @@
+#ifndef _HELLO_H
+#define _HELLO_H
+
+struct hello_dev{
+    int size;
+    u8 *data;
+    short users;
+    short media_change;
+    spinlock_t lock;
+    struct request_queue * queue;
+    struct gendisk *gd;
+    struct timer_list timer;
+};
+
+
+#endif

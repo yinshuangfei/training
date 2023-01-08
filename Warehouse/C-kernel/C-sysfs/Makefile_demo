@@ -1,0 +1,29 @@
+
+obj-m := demo.o
+KERNELDIR := /lib/modules/$(shell uname -r)/build
+PWD :=$(shell pwd)
+
+
+
+all:
+	@echo "Start build driver ..."	
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
+
+.PHONY: install
+install:
+	
+# a=123
+	echo $(a)
+	# if [ $? == 0 ] ; then echo "already instll" ; fi
+	# insmod ./demo.ko
+	# a=$(lsmod | grep demo | awk \'{print $1}\')
+
+.PHONY: uninstall
+uninstall:
+	rmmod demo
+
+
+.PHONY: clean
+clean:
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) clean 
+

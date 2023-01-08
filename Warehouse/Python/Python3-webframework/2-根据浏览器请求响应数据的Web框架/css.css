@@ -1,0 +1,13 @@
+div
+{
+    /* 初始化元素背景色为绿色 */
+    background-color:green;
+    /* 初始化元素宽200px */
+    width:200px;
+    /* 初始化元素高200px */
+    height:200px;
+    /* 初始化元素内填充40px */
+    padding:40px;
+    /* 初始化字体颜色为白色 */
+    color:#ffffff;
+}

@@ -1,0 +1,25 @@
+安装gcc/g++/gdb/make 等基本编程工具
+$sudo apt-get install build-essential
+
+用于在编译GTK程序时自动找出头文件及库文件位置　　
+$sudo apt-get install pkg-config
+
+安装 devhelp GTK文档查看程序
+$sudo apt-get install devhelp
+
+安装 gtk/glib 的API参考手册及其它帮助文档
+sudo apt-get install libglib2.0-doc libgtk2.0-doc
+
+安装基于GTK的界面GTK是开发Gnome窗口的c/c++语言图形库 
+$sudo apt-get install glade libglade2-dev  或者 $sudo apt-get install glade-gnome glade-common glade-doc
+
+安装gtk2.0 或者 将gtk+2.0所需的所有文件统通下载安装完毕
+$sudo apt-get install libgtk2.0-dev 或者 $sudo apt-get install libgtk2.0*
+
+================================
+查看是否安装了GTK：
+pkg-config --list-all | grep gtk
+
+查看GTK库版本：
+pkg-config --modversion gtk+-2.0
+pkg-config --modversion gtk+-3.0

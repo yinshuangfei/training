@@ -1,0 +1,3 @@
+rmmod hello
+cat /var/log/syslog | grep YSF
+rm /dev/ysf_dev

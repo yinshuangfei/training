@@ -1,0 +1,15 @@
+daemon使用明细
+
+启动脚本存放地址：/etc/init.d/*
+服务初始化环境配置文件：/etc/sysconfig/*
+服务各自的配置文件：/etc/*
+各服务产生的数据库：/var/lib/*
+各程序的PID记录处：/var/run/*
+
+立即运行daemon:service NAME start；
+	/etc/init.d/* start
+查看daemon是否运行：
+	service --status-all
+
+
+(查看进程：ps,top;查看服务对应端口：netstat -tulp[找出系统开启的网络服务]/-lnp[系统有监听网络的服务])

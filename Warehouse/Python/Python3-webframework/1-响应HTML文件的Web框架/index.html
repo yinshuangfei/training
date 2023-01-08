@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+　　<meta charset="UTF-8">
+　　<meta name="viewport" content="width=device-width, initial-scale=1.0">
+　　<meta http-equiv="X-UA-Compatible" content="ie=edge">
+　　<style>
+　　　　#in1
+　　　　{
+　　　　　　width: 400px;
+　　　　　　height: 60px;
+　　　　　　font-size: 26px;
+　　　　　　font-weight: bloder;
+　　　　　　line-height: 30px;
+　　　　　　border: none;
+　　　　}
+　　</style>
+　　<title>index</title>
+</head>
+<body>
+　　<h1>欢迎访问简易版Web框架主页</h1>
+　　<input type="text" id="in1"/>
+　　<script>
+　　　　var item;
+ 
+　　　　function f(){
+　　　　　　var time = new Date();　　　　　　　　　　  // 实例化时间对象
+　　　　　　var year = time.getFullYear();　　　　　  // 获得年
+　　　　　　var month = time.getMonth() + 1;　　　   // 获得月 
+　　　　　　var date = time.getDate();　　　　　　　  // 获得日
+　　　　　　var hours = time.getHours();　　　　　   // 获得小时 
+　　　　　　var minutes = time.getMinutes();　　　  // 获得分钟
+　　　　　　var seconds = time.getSeconds();　　   // 获得秒 
+
+　　　　　　// 月份与日期的显示为两位数字如01月01日
+　　　　　　if(month < 10 ){
+　　　　　　　　month = "0" + month;
+　　　　　　}
+　　　　　　if(date < 10 ){
+　　　　　　　　date = "0" + date;
+　　　　　　}
+ 
+　　　　　　// 时间拼接
+　　　　　　var dateTime = year + "年" + month + "月" + date + "日" + hours + "时" + minutes + "分" + seconds + "秒";
+　　　　　　// 利用ID获取到input元素
+　　　　　　var inputEle = document.getElementById("in1");
+　　　　　　// 将input元素的值设置为当前时间
+　　　　　　inputEle.value = dateTime;
+　　　　}
+　　　　// 定义启动函数
+　　　　function start(){
+　　　　　　// 初始化当前时间
+　　　　　　f();
+　　　　　　// 利用定时器每隔一段时间执行获取当前时间与赋值函数f
+　　　　　　item = setInterval(f, 1000);
+　　　　}
+　　　　// 调用启动函数
+　　　　start()
+　　　　</script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+cp ysf.service /lib/systemd/system/
+systemctl daemon-reload

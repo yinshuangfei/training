@@ -1,0 +1,9 @@
+1.首先编写daemon C程序，生成可执行文件，更改权限后放入/usr/sbin或者/usr/bin;
+2.编写daemon对应的脚本文件，作为service放入/ect/init.d
+
+更改权限： 	
+	chmod 777 ./file
+	查看进程： ps -ef
+	杀死进程： kill -s 9 PID
+	启动服务： service init_daemond start（前提是daemond脚本里有start代码）
+
