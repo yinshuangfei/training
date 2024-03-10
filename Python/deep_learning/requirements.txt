@@ -1,0 +1,4 @@
+mxnet==1.7.0
+pandas==0.24.2
+matplotlib_inline==0.1.6
+d2l==0.17.6
