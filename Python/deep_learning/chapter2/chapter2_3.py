@@ -1,7 +1,7 @@
 '''
 Author: Alan Yin
 Date: 2024-03-09 10:17:09
-LastEditTime: 2024-03-10 21:38:11
+LastEditTime: 2024-03-12 23:14:19
 LastEditors: Alan Yin
 FilePath: \training\Python\deep_learning\chapter2\chapter2_3.py
 Description:
@@ -10,6 +10,12 @@ Copyright (c) 2024 by HT706, All Rights Reserved.
 '''
 from mxnet import np, npx
 import os
+
+'''不加这句话，执行标量和矩阵的乘法会报错
+    y = 2 * np.dot(x, x)
+    MXNetError: Operator _npi_multiply_scalar inferring shapes failed.
+'''
+npx.set_np()
 
 def matrix():
     A = np.arange(20).reshape(5, 4)
@@ -49,7 +55,7 @@ def tensor():
     print(A, A.sum(axis=[0, 1]))
 
     # 求平均值
-    print(A.mean(), float(A.sum())/A.size)
+    print(A.mean(), A.sum() / A.size)
     # 沿着指定轴求维度
     print(A.mean(axis=0), A.sum(axis=0) / A.shape[0])
 
@@ -84,7 +90,6 @@ def tensor():
     print(np.abs(u).sum())
     # Frobenius范数
     print(np.linalg.norm(np.ones((4, 9))))
-
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 '''
 Author: Alan Yin
 Date: 2023-12-17 17:16:56
-LastEditTime: 2024-03-10 09:43:28
+LastEditTime: 2024-03-12 23:15:51
 LastEditors: Alan Yin
 FilePath: \training\Python\deep_learning\chapter2\chapter2_1.py
 Description:
@@ -10,7 +10,10 @@ Copyright (c) 2024 by HT706, All Rights Reserved.
 '''
 from mxnet import np, npx
 
-# npx.set_np()
+'''
+当使用张量时，几乎总是会调用set_np函数，这是为了兼容MXNet的其他张量处理组件。
+'''
+npx.set_np()
 
 # 初始化向量，打印 shape, size
 x = np.arange(12)
