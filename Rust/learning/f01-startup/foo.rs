@@ -6,7 +6,7 @@
  * @FilePath: /training/Rust/learning/01-startup/foo.rs
  * @Description:
  *
- * Copyright (c) 2023 by HT706, All Rights Reserved.
+ * Copyright (c) 2023 by Alan Yin, All Rights Reserved.
  */
 pub fn hello() {
     println!("hello");

@@ -4,16 +4,16 @@
 #include <linux/sysfs.h>
 #include <linux/slab.h>
 
-#define __DEBUG__ 1   
+#define __DEBUG__ 1
 
 #if (0 < __DEBUG__)
 	#define debug_info_fmt(fmt)		"[DC_GPIO] %s:%d "fmt
 	#define debug_warn_fmt(fmt)		"[DC_GPIO] %s:%d "fmt
 	#define debug_info(fmt, ...)	printk(KERN_INFO  debug_info_fmt(fmt),__FILE__,__LINE__,##__VA_ARGS__)
 	#define debug_warn(fmt, ...)	printk(KERN_ALERT debug_warn_fmt(fmt),__FILE__,__LINE__,##__VA_ARGS__)
-#else  
-	#define debug_info(fmt, ...)  
-	#define debug_warn(fmt, ...)  
+#else
+	#define debug_info(fmt, ...)
+	#define debug_warn(fmt, ...)
 #endif /*#define __DEBUG__*/
 
 
@@ -55,13 +55,13 @@ static struct kobj_type cld_ktype = {
 static int dc_gpio_init(void){
 	debug_info("Driver init\n");
 	int err;
-	
+
 	parent = kobject_create_and_add("gpio", NULL);
 
 	child = kzalloc(sizeof(*child), GFP_KERNEL);
 	if (!child)
 		return -1;
-	
+
 	c_kset = kset_create_and_add("c_kset", NULL, parent);
 	if(!c_kset)
 		return -1;
@@ -71,9 +71,9 @@ static int dc_gpio_init(void){
 	err = kobject_init_and_add(child, &cld_ktype, parent, "child_obj");
 	if (err)
 		return err;
-		
+
 	err = sysfs_create_file(child, &child_att);
-	
+
 	return 0;
 }
 
@@ -89,7 +89,7 @@ module_init(dc_gpio_init);
 module_exit(dc_gpio_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("HT706@7_StorageGroup");
+MODULE_AUTHOR("Alan Yin@7_StorageGroup");
 MODULE_DESCRIPTION("This is a FT-S2500 Double-Controller disk array \
 GPIO driver. It control the GPIO via SMC.");
 

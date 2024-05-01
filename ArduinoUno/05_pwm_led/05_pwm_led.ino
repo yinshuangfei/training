@@ -6,7 +6,7 @@
  * @FilePath: \Code\training\ArduinoUno\05_pwm_led\05_pwm_led.ino
  * @Description: PWM调光
  *
- * Copyright (c) 2024 by HT706, All Rights Reserved.
+ * Copyright (c) 2024 by Alan Yin, All Rights Reserved.
  */
 int potpin=0;//定义模拟接口0
 int ledpin=11;//定义数字接口11（PWM 输出）

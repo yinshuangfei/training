@@ -9,7 +9,7 @@ LastEditors: Alan Yin
 FilePath: /pmxcfs/mnt/g/软件共享/scraping/main_loop.py
 Description:
 
-Copyright (c) 2022 by HT706, All Rights Reserved.
+Copyright (c) 2022 by Alan Yin, All Rights Reserved.
 '''
 
 import builtwith

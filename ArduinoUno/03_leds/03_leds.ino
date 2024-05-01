@@ -6,7 +6,7 @@
  * @FilePath: \Code\training\ArduinoUno\03_leds\03_leds.ino
  * @Description: 广告灯
  *
- * Copyright (c) 2024 by HT706, All Rights Reserved.
+ * Copyright (c) 2024 by Alan Yin, All Rights Reserved.
  */
 int BASE = 2;	//第一颗 LED 接的 I/O 脚
 int NUM = 6;	//LED 的总数

@@ -6,7 +6,7 @@ LastEditors: Alan Yin
 FilePath: \training\Python\deep_learning\chapter2\chapter2_6.py
 Description:
 
-Copyright (c) 2024 by HT706, All Rights Reserved.
+Copyright (c) 2024 by Alan Yin, All Rights Reserved.
 '''
 # %%matplotlib inline
 import random

@@ -8,7 +8,7 @@ LastEditors: Alan Yin
 FilePath: /tmp_path/mnt/g/局域网共享/douban/main_loop.py
 Description:
 
-Copyright (c) 2023 by HT706, All Rights Reserved.
+Copyright (c) 2023 by Alan Yin, All Rights Reserved.
 '''
 
 import requests

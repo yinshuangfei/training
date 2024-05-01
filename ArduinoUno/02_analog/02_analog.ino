@@ -1,12 +1,12 @@
 /*
  * @Author: Alan Yin
  * @Date: 2024-03-24 10:35:56
- * @LastEditTime: 2024-03-24 23:38:53
+ * @LastEditTime: 2024-05-01 20:07:53
  * @LastEditors: Alan Yin
- * @FilePath: \Code\training\ArduinoUno\02_analog\02_analog.ino
+ * @FilePath: /windows_cifs/training/ArduinoUno/02_analog/02_analog.ino
  * @Description:
  *
- * Copyright (c) 2024 by HT706, All Rights Reserved.
+ * Copyright (c) 2024 by Alan Yin, All Rights Reserved.
  */
 
 int potpin=0;	//指定模拟端口A0

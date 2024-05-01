@@ -1,13 +1,15 @@
 <!--
  * @Author: Alan Yin
- * @Date: 2023-07-22 12:36:18
- * @LastEditTime: 2023-07-22 12:42:27
+ * @Date: 2024-05-01 19:18:08
+ * @LastEditTime: 2024-05-01 20:06:57
  * @LastEditors: Alan Yin
- * @FilePath: /training/README.md
+ * @FilePath: /windows_cifs/training/README.md
  * @Description:
- *
- * Copyright (c) 2023 by HT706, All Rights Reserved.
+ * // -*- mode:C; tab-width:8; c-basic-offset:2; indent-tabs-mode:t -*-
+ * // vim: ts=8 sw=2 smarttab
+ * Copyright (c) 2024 by Alan Yin, All Rights Reserved.
 -->
+
 # This is training project for myself.
 - Using GIT to push your code, not SSH.
 - This project contains Deploy Key.

@@ -6,7 +6,7 @@
  * @FilePath: \Code\training\ArduinoUno\04_buzzer\04_buzzer.ino
  * @Description: 蜂鸣器
  *
- * Copyright (c) 2024 by HT706, All Rights Reserved.
+ * Copyright (c) 2024 by Alan Yin, All Rights Reserved.
  */
 
 int buzzer = 8;//设置控制蜂鸣器的数字IO脚

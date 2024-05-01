@@ -15,7 +15,7 @@
  *
  * 	https://www.jianshu.com/p/2cbd07e22a9f
  *
- * Copyright (c) 2022 by HT706, All Rights Reserved.
+ * Copyright (c) 2022 by Alan Yin, All Rights Reserved.
  */
 #include <linux/module.h>
 #include <linux/kernel.h>

@@ -6,7 +6,7 @@
  * @FilePath: /learning/f02-guess_number/src/main.rs
  * @Description:
  *
- * Copyright (c) 2023 by HT706, All Rights Reserved.
+ * Copyright (c) 2023 by Alan Yin, All Rights Reserved.
  */
 
 /*

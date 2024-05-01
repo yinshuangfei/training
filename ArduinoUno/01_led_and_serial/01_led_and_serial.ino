@@ -1,13 +1,15 @@
 /*
  * @Author: Alan Yin
- * @Date: 2024-03-23 21:53:05
- * @LastEditTime: 2024-03-24 13:32:07
+ * @Date: 2024-05-01 19:18:08
+ * @LastEditTime: 2024-05-01 20:07:31
  * @LastEditors: Alan Yin
- * @FilePath: \Code\training\ArduinoUno\01_led_and_serial\01_led_and_serial.ino
+ * @FilePath: /windows_cifs/training/ArduinoUno/01_led_and_serial/01_led_and_serial.ino
  * @Description:
- *
- * Copyright (c) 2024 by HT706, All Rights Reserved.
+ * // -*- mode:C; tab-width:8; c-basic-offset:2; indent-tabs-mode:t -*-
+ * // vim: ts=8 sw=2 smarttab
+ * Copyright (c) 2024 by Alan Yin, All Rights Reserved.
  */
+
 
 int val;	//定义变量val
 int ledpin=13;	//定义数字接口13

@@ -6,7 +6,7 @@
  * @FilePath: /self_project/03_thread_pool/thread_pool.c
  * @Description:
  *
- * Copyright (c) 2024 by HT706, All Rights Reserved.
+ * Copyright (c) 2024 by Alan Yin, All Rights Reserved.
  */
 
 #include <pthread.h>

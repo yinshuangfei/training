@@ -6,7 +6,7 @@
  * @FilePath: /learning/f03-variable/src/main.rs
  * @Description:
  *
- * Copyright (c) 2023 by HT706, All Rights Reserved.
+ * Copyright (c) 2023 by Alan Yin, All Rights Reserved.
  */
 
 /*

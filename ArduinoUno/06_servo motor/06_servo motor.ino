@@ -6,7 +6,7 @@
  * @FilePath: \Code\training\ArduinoUno\06_servo motor\06_servo motor.ino
  * @Description:
  *
- * Copyright (c) 2024 by HT706, All Rights Reserved.
+ * Copyright (c) 2024 by Alan Yin, All Rights Reserved.
  */
 
 int servopin=9;//设置舵机驱动脚到数字口9
