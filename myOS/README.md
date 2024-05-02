@@ -21,3 +21,8 @@
 ```
 
 2.制作 bochdsrc.txt 配置文件；
+
+
+
+https://github.com/chenyukang/Panda
+https://github.com/chenyukang/Panda/tree/master
