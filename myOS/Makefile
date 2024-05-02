@@ -1,27 +1,9 @@
-C_SOURCES	= $(shell find . -name "*.c")
-C_OBJECTS	= $(patsubst %.c, %.o, $(C_SOURCES))
-S_SOURCES	= $(shell find . -name "*.s")
-S_OBJECTS	= $(patsubst %.s, %.o, $(S_SOURCES))
-
-CC			= gcc
-LD			= ld
-ASM			= nasm
-
-C_FLAGS		= -c -Wall -m32 -ggdb -gstabs+ -nostdinc -fno-pic -fno-builtin \
-			  -fno-stack-protector -I include
-LD_FLAGS	= -T scripts/kernel.ld -m elf_i386 -nostdlib
-ASM_FLAGS	= -f elf -g -F stabs
 
 QEMU		= /usr/libexec/qemu-kvm
 DISK		= disk.img
-
 OBJDIR		=./objs
 
-all: wr_bootloader qemu
-# $(S_OBJECTS)
-# @echo $(S_OBJECTS)
-# $(C_OBJECTS) link update_image
-
+all: auto wr_bootloader qemu
 
 .PHONY: qemu
 # Boot options:
@@ -30,40 +12,15 @@ all: wr_bootloader qemu
 #	-fda/-fdb file  use 'file' as floppy disk 0/1 image
 #	-hda/-hdb file  use 'file' as IDE hard disk 0/1 image
 #	-hdc/-hdd file  use 'file' as IDE hard disk 2/3 image
+
+# -fda: 读取软盘
+# -hda: 读取硬盘
 qemu:
+	# $(QEMU) -fda $(DISK) -rtc base=localtime -nographic -m 128;
 	$(QEMU) -hda $(DISK) -rtc base=localtime -nographic -m 128;
+
 # $(QEMU) -hda $(DISK) -boot c -nographic -m 10
 # $(QEMU) -hdb hd.img -fda a.img -rtc base=localtime -m 128;
-
-wr_bootloader: gen_disk auto
-	dd if=$(OBJDIR)/boot.bin of=$(DISK) status=noxfer conv=notrunc
-
-# .c.o:
-# 	@echo 编译代码文件 $< ...
-# 	$(CC) $(C_FLAGS) $< -o $@
-
-# .s.o:
-# 	@echo 编译汇编文件 $< ...
-# 	$(ASM) $(ASM_FLAGS) $<
-
-link:
-	@echo 链接内核文件...
-	$(LD) $(LD_FLAGS) $(S_OBJECTS) $(C_OBJECTS) -o hx_kernel
-
-# .PHONY:update_image
-# update_image:
-# 	sudo mount floppy.img /mnt/kernel
-# 	sudo cp hx_kernel /mnt/kernel/hx_kernel
-# 	sleep 1
-# 	sudo umount /mnt/kernel
-
-# .PHONY:mount_image
-# mount_image:
-# 	sudo mount floppy.img /mnt/kernel
-
-# .PHONY:umount_image
-# umount_image:
-# 	sudo umount /mnt/kernel
 
 # .PHONY:bochs
 # bochs:
@@ -83,6 +40,9 @@ bootlodaer:
 
 kernel:
 	@./build.sh -kernel
+
+wr_bootloader: gen_disk
+	dd if=tmp_$(DISK) of=$(DISK) status=noxfer conv=notrunc
 
 .PHONY: gen_disk
 gen_disk:

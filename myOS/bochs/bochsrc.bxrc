@@ -53,7 +53,7 @@ romimage: file=$BXSHARE/BIOS-bochs-latest
 # Point this to the pathname of a floppy image file or device. Floppya is the
 # first drive, and floppyb is the second drive. If you're booting from a floppy,
 # floppya should point to a bootable disk.
-# floppya: 1_44="$OSLAB_PATH/Image", status=inserted
+# floppya: image="../disk.img", status=inserted
 
 # ATA 通道配置
 # ata0: , ata1: , ata2: or ata3: These options enables up to 4 ata channels.
@@ -69,7 +69,6 @@ ata3: enabled=0, ioaddr1=0x168, ioaddr2=0x360, irq=9
 # ata0-master: type=disk, path="$OSLAB_PATH/hdc.img", mode=flat, cylinders=204,
 # heads=16, spt=38
 ata0-master: type=disk, mode=flat, path=../disk.img, cylinders=20, heads=16, spt=63
-#ata0-master: type=disk, path="c.img", mode=flat, cylinders=20, heads=16, spt=63
 
 # 启动配置
 # This defines the boot sequence. Now you can specify up to 3 boot drives, which

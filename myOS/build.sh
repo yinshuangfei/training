@@ -2,7 +2,7 @@
 ###
  # @Author: Alan Yin
  # @Date: 2024-05-02 20:59:06
- # @LastEditTime: 2024-05-03 00:39:30
+ # @LastEditTime: 2024-05-03 01:58:30
  # @LastEditors: Alan Yin
  # @FilePath: /windows_cifs/training/myOS/build.sh
  # @Description:
@@ -16,6 +16,8 @@ OBJDIR=./objs
 KERNEL="./core"
 TOOL="./tools"
 INCLUDE="./inc"
+
+DISK="tmp_disk.img"
 
 NASM="nasm -f elf"
 GCC=gcc
@@ -81,7 +83,22 @@ do_compile_kernel() {
 do_link() {
     echo "linking ..."
     pushd $OBJDIR
+
     $LD -m elf_i386 boot.O -o boot.bin -T ../$TOOL/boot.ld
+    $LD -m elf_i386 setup.O -o setup.bin -T ../$TOOL/setup.ld
+
+    if [ $? -ne 0 ]
+    then
+        echo "link error!"
+        exit
+    else
+        echo "making disk.img head ..."
+        # cat boot.bin setup.bin kernel.bin > ../a.img
+        cat boot.bin setup.bin > ../$DISK
+        # ls -lh kernel.bin;
+        # cd .a./;
+    fi
+
     popd
 }
 
