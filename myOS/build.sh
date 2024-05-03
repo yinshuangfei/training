@@ -2,7 +2,7 @@
 ###
  # @Author: Alan Yin
  # @Date: 2024-05-02 20:59:06
- # @LastEditTime: 2024-05-03 01:58:30
+ # @LastEditTime: 2024-05-03 17:29:30
  # @LastEditors: Alan Yin
  # @FilePath: /windows_cifs/training/myOS/build.sh
  # @Description:
@@ -15,17 +15,18 @@ BOOT=./boot
 OBJDIR=./objs
 KERNEL="./core"
 TOOL="./tools"
-INCLUDE="./inc"
+INCLUDE="./include"
 
 DISK="tmp_disk.img"
 
 NASM="nasm -f elf"
 GCC=gcc
 LD=ld
+OBJCPY="objcopy"
 
 CFLAGS="-Wall -m32 -O -nostdinc -fno-builtin -fno-stack-protector \
         -Wno-implicit-function-declaration -finline-functions \
-        -finline-functions-called-once -I./inc/ -ggdb -gstabs+"
+        -finline-functions-called-once -I${INCLUDE} -ggdb -gstabs+"
 # -m32: 生成32位代码
 # -O: 编译器尝试减小代码尺寸减少执行时间，不执行任何需要大量编译时间的优化
 # -nostdinc: 不包含 C 语言的标准库里的头文件
@@ -84,8 +85,17 @@ do_link() {
     echo "linking ..."
     pushd $OBJDIR
 
-    $LD -m elf_i386 boot.O -o boot.bin -T ../$TOOL/boot.ld
-    $LD -m elf_i386 setup.O -o setup.bin -T ../$TOOL/setup.ld
+    $LD -m elf_i386 -T ../$TOOL/boot.ld boot.O -o boot.bin
+    $LD -m elf_i386 -T ../$TOOL/setup.ld setup.O -o setup.bin
+
+    # head.O must puted at first
+    objs=`find ./ -name "*.o"`
+    echo "link kernel object list: $objs"
+    $LD -m elf_i386 -T ../$TOOL/kernel.ld head.O $objs -o kernel.elf
+
+    #$OBJDUMP -t kernel.bin | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > kernel.sym
+    # objcopy --info 可以列出支持的 -O 参数
+    $OBJCPY -R .pdr -R .comment -R .note -S -O binary kernel.elf kernel.bin
 
     if [ $? -ne 0 ]
     then
@@ -94,7 +104,7 @@ do_link() {
     else
         echo "making disk.img head ..."
         # cat boot.bin setup.bin kernel.bin > ../a.img
-        cat boot.bin setup.bin > ../$DISK
+        cat boot.bin setup.bin kernel.bin > ../$DISK
         # ls -lh kernel.bin;
         # cd .a./;
     fi
@@ -127,7 +137,7 @@ do
     case $1 in
         -auto|-a)
             do_auto
-            ;;
+            exit 0;;
         -bootloader|-bl)
             do_compile_bootloader
             ;;
@@ -149,3 +159,5 @@ do
     esac
     shift
 done
+
+do_auto

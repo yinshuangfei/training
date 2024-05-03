@@ -19,7 +19,8 @@ start:
     int 0x10
 
     ;; display loading on screen
-    mov si, msg
+    mov si, msg             ; SI = 源寄存器（Source Index）, 寄存器常用于字符串和数
+                            ; 组的操作, 指向源的起始位置
     call print
 
     ;; read the setup code from floppy
@@ -52,10 +53,10 @@ print:
     int 0x10
     jmp .next
 .done:
-	ret
+    ret
 
 msg	db "Loading Glue OS @Alan Yin"
-	db 13, 10, 0            ; 13: CR 回车, 10: LF 换行, 0: NUT 啥也不是
+    db 13, 10, 0            ; 13: CR 回车, 10: LF 换行, 0: NUT 啥也不是
 
 ;; some constants
 setupsegment    equ 0x9000  ; setup address

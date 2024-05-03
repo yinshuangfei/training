@@ -8,4 +8,4 @@ show_disk_content:
 	@hexdump -C -n 512 $(DISK)
 
 run:
-	@bochs -q -f bochsrc.bxrc
+	@bochsdbg -q -f bochsrc.bxrc
