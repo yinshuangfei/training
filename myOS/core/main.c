@@ -1,9 +1,9 @@
 /*
  * @Author: Alan Yin
  * @Date: 2024-05-03 16:47:03
- * @LastEditTime: 2024-05-03 19:37:08
+ * @LastEditTime: 2024-05-05 23:34:43
  * @LastEditors: Alan Yin
- * @FilePath: /windows_cifs/training/myOS/core/main.c
+ * @FilePath: /myOS/core/main.c
  * @Description:
  * // -*- mode:C; tab-width:8; c-basic-offset:2; indent-tabs-mode:t -*-
  * // vim: ts=8 sw=2 smarttab
@@ -11,7 +11,7 @@
  */
 
 #include <asm.h>
-// #include <screen.h>
+#include <screen.h>
 // #include <string.h>
 // #include <mm.h>
 // #include <hd.h>
@@ -30,9 +30,11 @@ s32 init = 0;
 
 void kmain(u32 init_stack) {
     init_esp_start = init_stack;
+
+    init_video();
+    puts_color_str("Booting Panda OS 333333 ...\n", 0x0B);
+    puts_color_str("Booting Panda OS 333333 ...\n", 0x0C);
     while (1) ;
-//     init_video();
-//     puts_color_str("Booting Panda OS ...\n", 0x0B);
 
 //     cli();
 //     time_init();

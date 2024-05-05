@@ -13,13 +13,11 @@ SECTIONS {
         *(.data);
         . = ALIGN(0x1000);
     }
-
     .bss :
     {
         __bss__ = .;
         *(.bss);
         . = ALIGN(0x1000);
     }
-
     __kimg_end__ = .;
 }

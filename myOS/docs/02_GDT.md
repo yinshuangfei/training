@@ -1,9 +1,9 @@
 <!--
  * @Author: Alan Yin
  * @Date: 2024-05-03 18:30:56
- * @LastEditTime: 2024-05-03 20:00:54
+ * @LastEditTime: 2024-05-05 21:20:24
  * @LastEditors: Alan Yin
- * @FilePath: /windows_cifs/training/myOS/docs/02_GDT_IDT.md
+ * @FilePath: /myOS/docs/02_GDT.md
  * @Description:
  * // -*- mode:C; tab-width:8; c-basic-offset:2; indent-tabs-mode:t -*-
  * // vim: ts=8 sw=2 smarttab
@@ -11,6 +11,7 @@
 -->
 
 https://zhuanlan.zhihu.com/p/561358124
+https://blog.csdn.net/abc123lzf/article/details/109289567
 
 ### 1.GDT 概述
 和一个段有关的信息需要 8 个字节来描述，所以称为段描述符（Segment Descriptor），每个段都需要一个描述符。为了存放这些描述符，需要在内存中开辟出一段空间。在这段空间里，所有的描述符都是挨在一起，集中存放的，这就构成一个描述符表。
@@ -72,6 +73,12 @@ mov dword [bx+0x18],0x00007a00
 mov dword [bx+0x1c],0x00409600
 ```
 （2）打开A20地址线
+[打开A20地址线](https://www.cnblogs.com/mqmelon/p/4790820.html)
+1）Keyboard Controller. 1、通过键盘控制器
+2）BIOS Function. 2、调用BIOS功能
+3）System Port.
+在 OS 的 boot 阶段一般都要做打开 A20 gate 操作，虽然现在 A20 gate 缺省为开的。
+
 实模式下的 wrap-around（地址回绕） 实模式下内存访问是采取“段基址：段内偏移地址”的形式，段基址要乘以 16 后再加上段内偏移地址。实模式下寄存器都是 16 位的，如果段基址和段内偏移地址都为 16 位的最大值，即 0xFFFF： 0xFFFF，最大地址是 0xFFFF0+0xFFFF， 即 0x10FFEF。由于实模式下的地址线是 20 位， 最大寻址空间是 1MB， 即 0x00000～0xFFFFF。超出 1MB 内存的部分在逻辑上也是正常的，但物理内存中却没有与之对应的部分。
 但 80286 有 24 条地址线，即 A0～A23，也就是说 A20 地址线是开启的。如果访问 0x100000～0x10FFEF 之间的内存，系统将直接 访问这块物理内存，并不会像 8086/8088 那样回绕到 0。
 为了解决此问题， IBM 在键盘控制器上的一些输出线来控制第 21 根地址线（A20）的有效性，故被称为 A20Gate。
@@ -97,3 +104,14 @@ mov cr0, eax       ; 将 eax 写回 cr0，这样 cr0 的 PE 位便为 1 了。
 
 (4)调试
 使用 bochsdbg -q -f bochsrc.bxrc 运行程序，然后按下 c, Ctrl + C, 输入 info gdt;
+
+# 5.GDT 和 LDT
+描述符表有 2 种：全局描述符表（GDT）和 局部描述符表（LDT）。全局描述符表（GDT）是全局性的，是为所有任务服务的，所以有一个就够了。局部描述符表（LDT）的数量可以不止一个，具体有多少，视任务数量而定。为了追踪这 2 种描述符表，处理器内部提供了全局描述符表寄存器（GDTR）和局部描述符表寄存器（LDTR） 。
+
+GDTR 中存储了全局描述符表（GDT）的基地址（保护模式下为 32位，IA-32e 模式下为 64位）和16 位的表限制 。
+
+![GDTR](https://pic4.zhimg.com/v2-4fba96f29df0216627ca37dc8ceb210b_r.jpg)
+
+局部描述符表（LDT）是作为全局描述符表（GDT）的一个段而存在的。LDTR 中保存了该段的段选择子（16 位），基地址（保护模式下为 32位，IA-32e 模式下为 64位），段限制（16 位）和段属性 。LDTR 本质上，是一个段寄存器，其格式如下：
+
+![LDTR](https://pic2.zhimg.com/v2-5545e88da259e00646d33f4f20c0b0d9_r.jpg)

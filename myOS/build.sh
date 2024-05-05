@@ -2,9 +2,9 @@
 ###
  # @Author: Alan Yin
  # @Date: 2024-05-02 20:59:06
- # @LastEditTime: 2024-05-03 17:29:30
+ # @LastEditTime: 2024-05-05 22:13:05
  # @LastEditors: Alan Yin
- # @FilePath: /windows_cifs/training/myOS/build.sh
+ # @FilePath: /myOS/build.sh
  # @Description:
  # // -*- mode:C; tab-width:8; c-basic-offset:2; indent-tabs-mode:t -*-
  # // vim: ts=8 sw=2 smarttab
@@ -66,7 +66,7 @@ do_compile_kernel() {
     do
         `$NASM $KERNEL/$f -o $OBJDIR/${f/.s/.O}`
         if [ $? -ne 0 ]
-            then exit;
+            then exit -1;
         fi
     done
 
@@ -76,7 +76,7 @@ do_compile_kernel() {
     do
         `$GCC $CFLAGS -c $KERNEL/$f -o $OBJDIR/${f/.c/.o}`
         if [ $? -ne 0 ]
-            then exit;
+            then exit -1;
         fi
     done
 }
@@ -100,7 +100,7 @@ do_link() {
     if [ $? -ne 0 ]
     then
         echo "link error!"
-        exit
+        exit -1
     else
         echo "making disk.img head ..."
         # cat boot.bin setup.bin kernel.bin > ../a.img

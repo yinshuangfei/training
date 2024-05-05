@@ -81,14 +81,16 @@ read_info:
 
     ;; 关闭中断
     cli
-    lgdt [gdt_addr]
+    lgdt [gdt_addr]                 ; 将 gdt_addr 地址指向的 GDT 表加载至 gdtr 中
+                                    ; 该地址目前没有在内存的起始地址
 
-    ;; enable A20
+    ;; enable A20, 使能 A20 包含多种模式, 现在 A20 gate 缺省为开的
+    ;; 下面的流程是仿照 linux 内核制作的
     call empty_8042
-    mov al, 0xd1
+    mov al, 0xd1                    ; command write
     out 0x64, al
     call empty_8042
-    mov al, 0xdf
+    mov al, 0xdf                    ; A20 on
     out 0x60, al
     call empty_8042
     ;; enter pretect-mode
@@ -96,14 +98,15 @@ read_info:
     or  eax, 1
     mov cr0, eax
 
-	;; jump into head, which at 0x00000
-    ;; jmp SELECTOR_CODE:p_mode_start
-	jmp dword 0x8:0x0
+    ;; jump into head, which at 0x00000
+    ;; jmp SELECTOR_CODE: OFFSET
+    jmp dword 0x8:0x0               ; 0x8 表示第1个 GDT 记录，第 0 个无效
+                                    ; 0x8 段选择子的基地址为 0
 
     ;; A20 键盘控制器芯片
 empty_8042:
-    in al, 0x64                     ; 读取输入端口, 取得控制器状态
-    test al, 0x2
+    in al, 0x64                     ; 读取输入端口, 取得控制器状态, 8042 status port
+    test al, 0x2                    ; is input buffer full
     jnz  empty_8042
     ret
 
@@ -155,24 +158,33 @@ gdt_system_code:
     dw 0x3fff               ; 段界限: 0-15, 实际效果 0x3fff fff
     dw 0x0000               ; 段基址: 0-15
     ;; 下面内容作为高 32 位进行描述
-    dw 0x9a00               ; 见下述描述, 1|00|1|1010,00000000
+    dw 0x9a00               ; 见下述描述, 1|00|1|1010,00000000，type 位保留
     ;; 高8位: (15)      P, 是否位于内存中
-    ;;        (14-13)   DPL,
-    ;;        (12)      S, =1 表示非系统段，=0 表示系统段
-    ;;        (11-8)    TYPE,
+    ;;        (14-13)   DPL, 访问段所需要的特权级，特权级范围为0～3，越小特权级越高
+    ;;        (12)      S, =1 表示非系统段（代码段或数据段, 栈段也是一种特殊的数据段）
+                         ; =0 表示系统段
+    ;;        (11-8)    TYPE, S=1，第三位为0时为数据段，为1时为代码段
     ;; 低8位: 段基址 23-16
     dw 0x00c0               ; 见下述描述, 00000000,1|1|0|0|0000
     ;; 高8位: 段基址 31-24
     ;; 低8位: (23)      G, 段界限粒度, 为0时表示粒度为1字节，为1时表示粒度为4KB
     ;;        (22)      D/B, 代码段此位是D位, 栈段此为是B位, 为0时表示使用的16位
-    ;;        (21)      L, 设置是否为64位代码段
-    ;;        (20)      AVL
+    ;;        (21)      L, 设置是否为64位代码段，L属性为1，则必须保证D属性为0
+    ;;        (20)      AVL, 可由操作系统、应用程序自行定义
     ;;        (19-16)   段界限 19-16
 gdt_syste_data:
     dw 0x3fff
     dw 0x0000
-    dw 0x9200               ; 1|00|1|0010,00000000
+    dw 0x9200               ; 1|00|1|0010,00000000, type 为 LDT
     dw 0x00c0               ; 00000000,1|1|0|0|0000
+
+; DA_DR     EQU 90h         ; 存在的只读数据段类型值
+; DA_DRW    EQU 92h         ; 存在的可读写数据段属性值
+; DA_DRWA   EQU 93h         ; 存在的已访问可读写数据段类型值
+; DA_C      EQU 98h         ; 存在的只执行代码段属性值
+; DA_CR     EQU 9Ah         ; 存在的可执行可读代码段属性值
+; DA_CCO    EQU 9Ch         ; 存在的只执行一致代码段属性值
+; DA_CCOR   EQU 9Eh         ; 存在的可执行可读一致代码段属性值
 
 ;; Magic number for sector
 times 512 - ($ - $$) db 0
