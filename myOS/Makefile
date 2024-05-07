@@ -50,5 +50,5 @@ gen_disk:
 
 .PHONY: clean
 clean:
-	rm -fr *.o *.O objs/* *.img
+	rm -fr *.o *.O objs/* *.img grub/*.img
 	# rm -fr $(S_OBJECTS) $(C_OBJECTS) hx_kernel boot.bin
