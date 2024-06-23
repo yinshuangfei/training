@@ -13,3 +13,8 @@ show_segment:
 proc:
 	@if ps -ef | grep "sleep.elf" | grep -v grep 1>/dev/null; then echo 'running ...' ; else ./sleep.elf & fi
 	@pid=`ps -ef | grep "sleep.elf" | grep -v grep | awk '{print $$2}'`; cat /proc/$${pid}/maps
+
+
+.PHOMY: clean
+clean:
+	rm -f *.o *.elf demo a.out

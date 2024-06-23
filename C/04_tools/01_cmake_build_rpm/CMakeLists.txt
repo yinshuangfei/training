@@ -1,0 +1,47 @@
+cmake_minimum_required(VERSION 3.1)
+
+project(nasmgmt C)
+
+set(CMAKE_C_STANDARD 99)
+set(PROJECT_VERSION_MAJOR 0)
+set(PROJECT_VERSION_MINOR 0)
+set(PROJECT_VERSION_PATCH 1)
+set(PROJECT_VERSION
+    ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+
+set(LIB_SRC
+    lib/libnasmgmt.c)
+set(TEST_SRC
+    test/test.c)
+
+include_directories(include)
+
+add_library(${PROJECT_NAME}
+    SHARED ${LIB_SRC})
+add_executable(test
+    ${TEST_SRC})
+
+target_link_libraries(test ${PROJECT_NAME})
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR})
+
+install(TARGETS ${PROJECT_NAME}
+    LIBRARY DESTINATION lib)
+install(FILES include/libnasmgmt.h
+    DESTINATION include/)
+
+
+set(CPACK_PACKAGE_NAME lib${PROJECT_NAME})
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "NAS Managment RPM package")
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_RELEASE 1)
+set(CPACK_PACKAGE_VENDOR "HT706")
+set(CPACK_RPM_PACKAGE_GROUP "CASIC")
+set(CPACK_RPM_PACKAGE_LICENSE "CASIC Licence")
+set(CPACK_RPM_PACKAGE_DESCRIPTION "NAS Managment RPM package API")
+set(CPACK_GENERATOR "RPM")
+set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
+
+include(CPack)

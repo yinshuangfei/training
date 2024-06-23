@@ -4,6 +4,9 @@
     "string.h": "c",
     "screen.h": "c",
     "types.h": "c",
-    "system.h": "c"
+    "system.h": "c",
+    "errno.h": "c",
+    "fcntl.h": "c",
+    "unistd.h": "c"
   }
 }

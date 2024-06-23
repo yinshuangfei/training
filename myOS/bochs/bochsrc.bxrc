@@ -68,7 +68,8 @@ ata3: enabled=0, ioaddr1=0x168, ioaddr2=0x360, irq=9
 # ata[0-3]-master: or ata[0-3]-slave:
 # ata0-master: type=disk, path="$OSLAB_PATH/hdc.img", mode=flat, cylinders=204,
 # heads=16, spt=38
-ata0-master: type=disk, mode=flat, path=../disk.img
+ata0-master: type=disk, mode=flat, path=../disk_grub.img
+#ata0-master: type=disk, mode=flat, path=../disk.img
 #, cylinders=20, heads=16, spt=63
 
 # 启动配置

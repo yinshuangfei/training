@@ -1,0 +1,6 @@
+This is a shared library for NAS managment.
+
+build
+=====
+$ mkdir build && cmake ..
+$ cpack

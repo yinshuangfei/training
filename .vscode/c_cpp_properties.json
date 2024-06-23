@@ -1,0 +1,18 @@
+{
+  "configurations": [
+      {
+          "name": "Linux",
+          "includePath": [
+              "${workspaceFolder}/**",
+              "/usr/include/",
+              "/usr/include/glib-2.0",
+              "${workspaceFolder}/include/"
+          ],
+          "defines": [
+          ],
+          "cStandard": "gnu17",
+          "cppStandard": "gnu++17"
+      }
+  ],
+  "version": 4
+}
