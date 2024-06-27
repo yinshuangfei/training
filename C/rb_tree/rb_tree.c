@@ -1,17 +1,29 @@
+/*
+ * @Author: Alan Yin
+ * @Date: 2023-07-22 19:38:08
+ * @LastEditTime: 2024-06-27 22:21:07
+ * @LastEditors: Alan Yin
+ * @FilePath: /training/C/rb_tree/rb_tree.c
+ * @Description:
+ * // -*- mode:C; tab-width:8; c-basic-offset:2; indent-tabs-mode:t -*-
+ * // vim: ts=8 sw=2 smarttab
+ * Copyright (c) 2024 by HT706, All Rights Reserved.
+ */
+
 #include "rb_tree.h"
 
 
-/* 
+/*
  * 对红黑树的节点(x)进行左旋转
  *
  * 左旋示意图(对节点x进行左旋)：
  *      px                              px
  *     /                               /
- *    x                               y                
- *   /  \      --(左旋)-->           / \      
- *  lx   y                          x  ry     
+ *    x                               y
+ *   /  \      --(左旋)-->           / \
+ *  lx   y                          x  ry
  *     /   \                       /  \
- *    ly   ry                     lx  ly  
+ *    ly   ry                     lx  ly
  *
  *
  */
@@ -41,7 +53,7 @@
 //         else
 //             x->parent->right = y;    // 如果 x是它父节点的左孩子，则将y设为“x的父节点的左孩子”
 //     }
-    
+
 //     // 将 “x” 设为 “y的左孩子”
 //     y->left = x;
 //     // 将 “x的父节点” 设为 “y”
@@ -50,18 +62,18 @@
 
 
 
-/* 
+/*
  * 对红黑树的节点(y)进行右旋转
  *
  * 右旋示意图(对节点y进行右旋)：
  *            py                               py
  *           /                                /
- *          y                                x                  
+ *          y                                x
  *         /  \      --(右旋)-->            /  \                     #
- *        x   ry                           lx   y  
+ *        x   ry                           lx   y
  *       / \                                   / \                   #
  *      lx  rx                                rx  ry
- * 
+ *
  */
 // static void rbtree_right_rotate(RBRoot *root, Node *y)
 // {
@@ -77,7 +89,7 @@
 //     // 将 “y的父亲” 设为 “x的父亲”
 //     x->parent = y->parent;
 
-//     if (y->parent == NULL) 
+//     if (y->parent == NULL)
 //     {
 //         //tree = x;            // 如果 “y的父亲” 是空节点，则将x设为根节点
 //         root->node = x;            // 如果 “y的父亲” 是空节点，则将x设为根节点
@@ -104,6 +116,6 @@ rb_root * create_rbtree()
 {
     rb_root * root = (rb_root *) malloc(sizeof(rb_root));
     root->node = NULL;
-    
+
     return root;
 }

@@ -34,4 +34,4 @@ kill:
 .PHONY:clean
 clean:
 	for i in ${DIRS}; do make $@ -C $$i; done
-	-rm -rf *.o *.o.d *~ a.out $(PROGRAM_NAME)
+	-rm -rf *.o *.o.d *~ a.out $(PROGRAM_NAME) $(PROGRAM_NAME).exe

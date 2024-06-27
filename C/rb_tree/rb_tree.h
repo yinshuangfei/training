@@ -1,7 +1,19 @@
-#ifndef _RB_TREE_H_ 
-#define _RB_TREE_H_ 
+/*
+ * @Author: Alan Yin
+ * @Date: 2023-07-22 19:38:08
+ * @LastEditTime: 2024-06-27 22:22:04
+ * @LastEditors: Alan Yin
+ * @FilePath: /training/C/rb_tree/rb_tree.h
+ * @Description:
+ * // -*- mode:C; tab-width:8; c-basic-offset:2; indent-tabs-mode:t -*-
+ * // vim: ts=8 sw=2 smarttab
+ * Copyright (c) 2024 by HT706, All Rights Reserved.
+ */
 
-/* 
+#ifndef _RB_TREE_H_
+#define _RB_TREE_H_
+
+/**
 基本特性：
 1.根节点是黑色的
 2.叶子节点（NULL）是黑色的,叶子节点只为空
@@ -49,4 +61,4 @@ int print_rbtree(rb_root root);
 
 int destroy_rbtree();
 
-#endif /* _RB_TREE_H_  */
+#endif /** _RB_TREE_H_  */

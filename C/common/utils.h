@@ -1,7 +1,7 @@
 /*
  * @Author: Alan Yin
  * @Date: 2024-04-20 23:35:55
- * @LastEditTime: 2024-06-22 15:50:08
+ * @LastEditTime: 2024-06-27 20:53:18
  * @LastEditors: Alan Yin
  * @FilePath: /training/C/common/utils.h
  * @Description:
@@ -14,6 +14,8 @@
 #define YSF_UTILS_H
 
 #include <stdio.h>
+
+#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
 #define pr(format, ...)							\
 	fprintf(stdout, "[DEBUG] (%s:%s:%d): "format"\n",		\

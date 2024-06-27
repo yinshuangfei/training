@@ -1,5 +1,5 @@
 all:
-	gcc myls.c  
+	gcc ls.c
 
 .PHONY: clean
 clean:
