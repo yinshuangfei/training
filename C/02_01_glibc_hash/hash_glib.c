@@ -1,13 +1,13 @@
 /*
  * @Author: Alan Yin
  * @Date: 2023-07-22 19:38:08
- * @LastEditTime: 2024-06-27 21:03:00
+ * @LastEditTime: 2024-07-02 22:40:54
  * @LastEditors: Alan Yin
- * @FilePath: /training/C/02_glibc_hash/hash_glib.c
+ * @FilePath: /training/C/02_01_glibc_hash/hash_glib.c
  * @Description:
  * // -*- mode:C; tab-width:8; c-basic-offset:2; indent-tabs-mode:t -*-
  * // vim: ts=8 sw=2 smarttab
- * Copyright (c) 2024 by HT706, All Rights Reserved.
+ * Copyright (c) 2024 by Alan Yin, All Rights Reserved.
  */
 #include <stdio.h>
 #include <glib.h>

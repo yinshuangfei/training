@@ -29,10 +29,11 @@
 #ifndef __TOOLS_LINUX_PERF_RBTREE_H
 #define __TOOLS_LINUX_PERF_RBTREE_H
 
-#include <linux/kernel.h>
-#include <linux/stddef.h>
+#include "kernel.h"
+#include "stddef.h"
 
 struct rb_node {
+	/** __rb_parent_color 其实是一个指针，指向(struct rb_node *) */
 	unsigned long  __rb_parent_color;
 	struct rb_node *rb_right;
 	struct rb_node *rb_left;
