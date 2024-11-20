@@ -1,33 +1,17 @@
+/* SPDX-License-Identifier: GPL-2.0-or-later */
 /*
   Red Black Trees
   (C) 1999  Andrea Arcangeli <andrea@suse.de>
   (C) 2002  David Woodhouse <dwmw2@infradead.org>
   (C) 2012  Michel Lespinasse <walken@google.com>
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-  tools/linux/include/linux/rbtree_augmented.h
-
-  Copied from:
   linux/include/linux/rbtree_augmented.h
 */
 
-#ifndef _TOOLS_LINUX_RBTREE_AUGMENTED_H
-#define _TOOLS_LINUX_RBTREE_AUGMENTED_H
+#ifndef _LINUX_RBTREE_AUGMENTED_H
+#define _LINUX_RBTREE_AUGMENTED_H
 
-#include "compiler.h"
 #include "rbtree.h"
 
 /*
@@ -35,8 +19,10 @@
  * rb_insert_augmented() and rb_erase_augmented() are intended to be public.
  * The rest are implementation details you are not expected to depend on.
  *
- * See Documentation/rbtree.txt for documentation and samples.
+ * See Documentation/core-api/rbtree.rst for documentation and samples.
  */
+
+#define WRITE_ONCE(a,b)		(a) = (b)
 
 struct rb_augment_callbacks {
 	void (*propagate)(struct rb_node *node, struct rb_node *stop);
@@ -192,6 +178,21 @@ __rb_change_child(struct rb_node *old, struct rb_node *new,
 		WRITE_ONCE(root->rb_node, new);
 }
 
+#ifdef _INCLUDE_UNUSED_CODE_
+static inline void
+__rb_change_child_rcu(struct rb_node *old, struct rb_node *new,
+		      struct rb_node *parent, struct rb_root *root)
+{
+	if (parent) {
+		if (parent->rb_left == old)
+			rcu_assign_pointer(parent->rb_left, new);
+		else
+			rcu_assign_pointer(parent->rb_right, new);
+	} else
+		rcu_assign_pointer(root->rb_node, new);
+}
+#endif
+
 extern void __rb_erase_color(struct rb_node *parent, struct rb_root *root,
 	void (*augment_rotate)(struct rb_node *old, struct rb_node *new));
 
@@ -284,14 +285,12 @@ __rb_erase_augmented(struct rb_node *node, struct rb_root *root,
 		__rb_change_child(node, successor, tmp, root);
 
 		if (child2) {
-			successor->__rb_parent_color = pc;
 			rb_set_parent_color(child2, parent, RB_BLACK);
 			rebalance = NULL;
 		} else {
-			unsigned long pc2 = successor->__rb_parent_color;
-			successor->__rb_parent_color = pc;
-			rebalance = __rb_is_black(pc2) ? parent : NULL;
+			rebalance = rb_is_black(successor) ? parent : NULL;
 		}
+		successor->__rb_parent_color = pc;
 		tmp = successor;
 	}
 
@@ -317,4 +316,4 @@ rb_erase_augmented_cached(struct rb_node *node, struct rb_root_cached *root,
 	rb_erase_augmented(node, &root->rb_root, augment);
 }
 
-#endif /* _TOOLS_LINUX_RBTREE_AUGMENTED_H */
+#endif	/* _LINUX_RBTREE_AUGMENTED_H */
