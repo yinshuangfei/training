@@ -17,21 +17,54 @@
 
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
+/**
+ * 输出颜色：
+ * echo -e "\e[31m红色文本\e[0m"
+ * echo -e "\e[32m绿色文本\e[0m"
+ * echo -e "\e[33m黄色文本\e[0m"
+ * echo -e "\e[34m蓝色文本\e[0m"
+ * echo -e "\e[35m紫色文本\e[0m"
+ * echo -e "\e[36m青色文本\e[0m"
+ * echo -e "\e[37m白色文本\e[0m"
+*/
+#define ENTRY_PREFIX	"\e[35m[ENTRY ----->]\e[0m"
+#define DEBUG_PREFIX	"\e[34m[DEBUG]\e[0m"
+#define INFO_PREFIX	"\e[32m[INFO]\e[0m"
+#define WARN_PREFIX	"\e[33m[WARN]\e[0m"
+#define ERR_PREFIX	"\e[31m[ERR]\e[0m"
+
+#define pr_entry()							\
+	do {								\
+		fprintf(stdout, ENTRY_PREFIX				\
+			" ========>>> [   %-20s   ] <<<========\n",	\
+			__FUNCTION__);					\
+	} while (0)
+
 #define pr(format, ...)							\
-	fprintf(stdout, "[DEBUG] (%s:%s:%d): "format"\n",		\
-		__FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
+	do {								\
+		fprintf(stdout, DEBUG_PREFIX" (%s:%d): "format"\n",	\
+			__FUNCTION__, __LINE__, ##__VA_ARGS__);		\
+	} while (0)
+
+#define pr_dbg pr
 
 #define pr_info(format, ...)						\
-	fprintf(stdout, "[INFO] "format"\n",				\
-		##__VA_ARGS__)
+	do {								\
+		fprintf(stdout, INFO_PREFIX" (%s:%d): "format"\n",	\
+			__FUNCTION__, __LINE__, ##__VA_ARGS__);		\
+	} while (0)
 
 #define pr_warn(format, ...)						\
-	fprintf(stdout, "[WARN] "format"\n",				\
-		##__VA_ARGS__)
+	do {								\
+		fprintf(stdout, WARN_PREFIX" (%s:%d): "format"\n",	\
+			__FUNCTION__, __LINE__, ##__VA_ARGS__);		\
+	} while (0)
 
 #define pr_err(format, ...)						\
-	fprintf(stderr, "[ERR] "format"\n",				\
-		##__VA_ARGS__)
+	do {								\
+		fprintf(stderr, ERR_PREFIX" (%s:%d): "format"\n",	\
+			__FUNCTION__, __LINE__, ##__VA_ARGS__);		\
+	} while (0)
 
 #define SAFE_FREE(ptr)							\
 	if (ptr) {							\

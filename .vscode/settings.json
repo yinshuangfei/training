@@ -34,5 +34,6 @@
     "map": "c",
     "cstdlib": "c",
     "memory_resource": "c"
-  }
+  },
+  "cmake.sourceDirectory": "/windows_cifs/training/C/04_tools/01_cmake_build_rpm"
 }

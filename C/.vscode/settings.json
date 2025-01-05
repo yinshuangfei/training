@@ -1,6 +1,7 @@
 {
   "files.associations": {
     "server.h": "c",
-    "errno.h": "c"
+    "errno.h": "c",
+    "utils.h": "c"
   }
 }

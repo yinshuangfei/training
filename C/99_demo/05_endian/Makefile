@@ -18,14 +18,14 @@ COMM_OBJS := $(foreach i,$(COMM_OBJS),$(COMMON)/$(i))
 CC = gcc
 CFLAGS = -Wall -D_FILE_OFFSET_BITS=64 -I./include -g
 CFLAGS += $(shell pkg-config --cflags ${DEPENDENCIES})
-LDFLAGS += $(shell pkg-config --libs ${DEPENDENCIES}) -lpthread
+LDFLAGS += $(shell pkg-config --libs ${DEPENDENCIES})
 
 CFLAGS = -D ENABLE_LOG_TO_FILE
 
 # DO IT !!!
 all: $(PROGRAM_NAME)
 	@# clear
-	@./$(PROGRAM_NAME)
+	@./$(PROGRAM_NAME) 127.0.0.1
 
 # 调试
 dbg: $(PROGRAM_NAME)
@@ -46,4 +46,4 @@ kill:
 # 清空项目
 .PHONY: clean
 clean:
-	rm -rf *.o *.o.d a.out $(PROGRAM_NAME)
+	rm -rf *.o *.o.d a.out $(PROGRAM_NAME) demo_log_file.txt ttt_demo_aaa_iii
