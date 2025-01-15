@@ -10,6 +10,7 @@
 #include <time.h>
 #include <errno.h>
 #include <sys/time.h>
+#include <netdb.h>		/** getprotobyname */
 
 #include "../../common/utils.h"
 
@@ -125,12 +126,11 @@ int receive_packet(int sockfd, struct sockaddr_in *dest_addr,
 
 		timersub(&recv_tv, icpm_tv, &diff_tv);
 
-		pr_info("Received reply from %s: type:%d, ttl:%d, time=%.3f ms",
+		pr_info("Received reply from %s: type:%d, ttl:%d, time=%.3fms",
 			inet_ntoa(dest_addr->sin_addr),
 			icmp_hdr->icmp_type,
 			ip_hdr->ip_ttl,
-			diff_tv.tv_sec * 1000 +
-			(float)diff_tv.tv_usec / 1000);
+			diff_tv.tv_sec * 1000 + (float)diff_tv.tv_usec / 1000);
 	} else {
 		pr_err("Received unexpected packet from %s, icmp_type:%d, icmp_id:%d, sec:%ld, usec:%ld",
 			inet_ntoa(dest_addr->sin_addr),
@@ -151,7 +151,17 @@ int ping(char *ipaddr)
 	struct timeval tv;
 	struct timeval tv_timeout;
 
-	if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+	/**
+	 * 使用 getprotobyname 的方法如下：
+	struct protoent *protocol = getprotobyname("icmp");
+	if (protocol == NULL) {
+		pr_err("getprotobyname error (%d:%s)", errno, strerror(errno));
+		return -errno;
+	}
+	sockfd = socket(AF_INET, SOCK_RAW, protocol->p_proto);
+	*/
+	sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+	if (sockfd < 0) {
 		pr_err("socket error (%d:%s)", errno, strerror(errno));
 		return -errno;
 	}

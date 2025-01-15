@@ -66,6 +66,20 @@
 			__FUNCTION__, __LINE__, ##__VA_ARGS__);		\
 	} while (0)
 
+#define pr_stdwarn(format, ...)						\
+	do {								\
+		fprintf(stdout, WARN_PREFIX" (%s:%d): "format" (%d:%s)\n",\
+			__FUNCTION__, __LINE__, ##__VA_ARGS__,		\
+			errno, strerror(errno));			\
+	} while (0)
+
+#define pr_stderr(format, ...)						\
+	do {								\
+		fprintf(stderr, ERR_PREFIX" (%s:%d): "format" (%d:%s)\n",\
+			__FUNCTION__, __LINE__, ##__VA_ARGS__,		\
+			errno, strerror(errno));			\
+	} while (0)
+
 #define SAFE_FREE(ptr)							\
 	if (ptr) {							\
 		free(ptr);						\

@@ -2,6 +2,8 @@
   "files.associations": {
     "server.h": "c",
     "errno.h": "c",
-    "utils.h": "c"
+    "utils.h": "c",
+    "sort_alg.h": "c",
+    "load_random.h": "c"
   }
 }
