@@ -5,12 +5,7 @@ PROGRAM_NAME = program
 DEPENDENCIES =
 
 # 源码定义
-SERVER_SRCS = \
-	00_load_data/load_random.c \
-	01_sort/insert_sort.c \
-	01_sort/shell_sort.c \
-	01_sort/bubble_sort.c\
-	test_main.c
+SERVER_SRCS = test_main.c
 SERVER_OBJS := $(SERVER_SRCS:%.c=%.o)
 
 # 公共代码定义
@@ -23,12 +18,13 @@ COMM_OBJS := $(foreach i,$(COMM_OBJS),$(COMMON)/$(i))
 CC = gcc
 CFLAGS = -Wall -D_FILE_OFFSET_BITS=64 -I./include -g
 CFLAGS += $(shell pkg-config --cflags ${DEPENDENCIES})
-LDFLAGS += $(shell pkg-config --libs ${DEPENDENCIES})
+LDFLAGS += $(shell pkg-config --libs ${DEPENDENCIES}) -L./ -la
 
-CFLAGS = -D ENABLE_LOG_TO_FILE
+CFLAGS += -D ENABLE_LOG_TO_FILE
+# 相对路径的库
+CFLAGS += -Wl,--rpath=./
 
 # DO IT !!!
-# valgrind --leak-check=full ./$(PROGRAM_NAME)
 all: $(PROGRAM_NAME)
 	@# clear
 	@./$(PROGRAM_NAME)
@@ -38,9 +34,13 @@ dbg: $(PROGRAM_NAME)
 	@gdb --args $(PROGRAM_NAME) -f
 
 
+liba.so: liba.c
+	$(CC) -g -o $@ $^ -shared -fPIC
+
+
 # 项目编译规则
-$(PROGRAM_NAME): $(SERVER_OBJS) $(COMM_OBJS)
-	$(CC) -g -o $@ $^ $(LDFLAGS)
+$(PROGRAM_NAME): $(SERVER_OBJS) $(COMM_OBJS) liba.so
+	$(CC) -g -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
 
 # 杀死进程
@@ -52,6 +52,4 @@ kill:
 # 清空项目
 .PHONY: clean
 clean:
-	rm -rf *.o *.o.d a.out $(PROGRAM_NAME) data.txt
-	make -C 00_load_data clean
-	make -C 01_sort clean
+	rm -rf *.o *.o.d a.out $(PROGRAM_NAME) liba.so

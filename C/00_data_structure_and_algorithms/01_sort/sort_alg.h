@@ -34,6 +34,7 @@ typedef void(*sort_fn)(char *name, long *data, long total);
 
 void insert_sort(char *name, long *data, long total);
 void shell_sort(char *name, long *data, long total);
+void bubble_sort(char *name, long *data, long total);
 
 static inline void check_sort(long *data, long total)
 {

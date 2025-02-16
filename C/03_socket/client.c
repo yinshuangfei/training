@@ -31,32 +31,83 @@ int main(int argc, char *argv[])
 	int sock_fd;
 	int size;
 	int pid;
+	int rc;
 	char buff[MAX_DATASIZE];
-	struct sockaddr_in server_addr;
 
-	/** 创建套接字 */
+	struct sockaddr_in server_addr, client_addr;
+	const char *server_ip = "192.168.81.66";	// Remote server IP
+	int server_port = SERVER_PORT;			// Remote server port
+	const char *local_ip = "192.168.81.66";		// Local IP address to bind to
+
+	/**
+	 * 创建套接字
+	 * Step 1: Create a socket
+	 */
 	sock_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (-1 == sock_fd) {
-		pr_err("socket init error (%d:%s)\n", -errno, strerror(errno));
+		pr_stderr("socket init error");
 		return -errno;
 	}
 
-	/** 填写套接字描述符 */
-	// internet 连接的默认值
-	server_addr.sin_family = AF_INET;
-	// 将端口号转换为标准格式，为 0 则由系统自己分配一个未占用的端口号
-	server_addr.sin_port = htons(SERVER_PORT);
-	server_addr.sin_addr.s_addr = inet_addr(SERVER_IP_ADDR);
-	// sockaddr_in 结构体的剩余字节处用 0 填充
-	bzero(&(server_addr.sin_zero), 8);
-
-	/** 连接套接字 */
-	if (-1 == connect(sock_fd, (struct sockaddr *)&server_addr,
-			  sizeof(struct sockaddr))) {
-		pr_info("socket connect error, exit now.");
-		exit(1);
+	/**
+	 * 指定客户端 IP 地址
+	 * Step 2: Set up the client address structure
+	 */
+	memset(&client_addr, 0, sizeof(client_addr));
+	client_addr.sin_family = AF_INET;
+	// 使用特定端口可能会报错：Address already in use
+	// Use ephemeral port, OS will pick an available one
+	client_addr.sin_port = 0;
+	/** 以下方式自由选择 */
+#if 0
+	client_addr.sin_addr.s_addr = inet_addr(local_ip);
+	bzero(&(client_addr.sin_zero), 8);
+#else
+	rc = inet_pton(AF_INET, local_ip, &client_addr.sin_addr);
+	if (rc <= 0) {
+		pr_stderr("Invalid local IP address");
+		return 1;
+	}
+#endif
+	/**
+	 * Step 3: Bind the socket to the local IP address
+	 */
+	rc = bind(sock_fd, (struct sockaddr*)&client_addr, sizeof(client_addr));
+	if (rc < 0) {
+		pr_stderr("Bind failed");
+		return 1;
 	}
 
+	/**
+	 * 填写套接字描述符
+	 * Step 4: Set up the server address structure
+	 */
+	memset(&server_addr, 0, sizeof(server_addr));
+	server_addr.sin_family = AF_INET;
+	/** 将端口号转换为标准格式，为 0 则由系统自己分配一个未占用的端口号 */
+	server_addr.sin_port = htons(server_port);
+	/** 以下方式自由选择 */
+#if 0
+	server_addr.sin_addr.s_addr = inet_addr(server_ip);
+	bzero(&(server_addr.sin_zero), 8);
+#else
+	rc = inet_pton(AF_INET, server_ip, &server_addr.sin_addr);
+	if (rc <= 0) {
+		pr_stderr("Invalid server IP address");
+		return 1;
+	}
+#endif
+	/** 连接套接字
+	 * Step 5: Connect to the remote server
+	 */
+	rc = connect(sock_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
+	if (rc < 0) {
+		pr_stderr("socket connect error, exit now.");
+		return 1;
+	}
+
+	pr_info("Successfully connected to the server at %s:%d from local IP %s",
+		server_ip, server_port, local_ip);
 	pr_info("client PID is: %d", getpid());
 	pr_info("Input 'exit' to exit.");
 
@@ -107,10 +158,3 @@ int main(int argc, char *argv[])
 	pr_info("my service is satisfied, bye...\n");
 	exit(0);
 }
-
-
-
-
-
-
-

@@ -92,7 +92,7 @@ err:
 	return rc;
 }
 
-static int __load_data(char *filename, long **data, long *total)
+static int __load_data(char *filename, long **data, long *total, int debug)
 {
 	int rc = 0;
 	FILE *file = NULL;
@@ -142,7 +142,9 @@ static int __load_data(char *filename, long **data, long *total)
 
 	*total = lines;
 
-	pr_dbg("total lines %d", lines);
+	if (debug) {
+		pr_dbg("load success, total lines: %d", lines);
+	}
 
 	return 0;
 
@@ -156,7 +158,7 @@ int load_data(char *filename, long **data, long *total, long creat_size,
 {
 	int rc = 0;
 
-	rc = __load_data(filename, data, total);
+	rc = __load_data(filename, data, total, debug);
 	if (rc == -ENOENT) {
 		pr_info("create %s, and start generate random data", filename);
 
@@ -168,7 +170,7 @@ int load_data(char *filename, long **data, long *total, long creat_size,
 		if (0 != rc)
 			return rc;
 
-		rc = __load_data(filename, data, total);
+		rc = __load_data(filename, data, total, debug);
 		if (0 != rc)
 			return rc;
 	}
