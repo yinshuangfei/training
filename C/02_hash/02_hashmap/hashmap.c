@@ -43,7 +43,12 @@ struct bucket {
 						// 当前哈希值存储的 element 数目?
 };
 
-/** 开放寻址 hashmap, 使用 robinhood hash 算法 */
+/**
+ * 开放寻址 hashmap, 使用 robinhood hash 算法
+ *
+ * 结构体在头文件中声明，但是在 C 文件中定义，这样可以保护结构体中的信息，外界不能随
+ * 意访问，类似面向对象的 protect 属性。如 map->oom 的访问将导致编译失败。
+ */
 struct hashmap {
 	void *(*malloc)(size_t);
 	void *(*realloc)(void *, size_t);
@@ -150,6 +155,8 @@ static uint64_t get_hash(struct hashmap *map, const void *key)
 }
 
 /** 使用自定义分配器创建哈希 map */
+// hashmap_new_with_allocator returns a new hash map using a custom allocator.
+// See hashmap_new for more information information
 struct hashmap *hashmap_new_with_allocator(void *(*_malloc)(size_t),
 	void *(*_realloc)(void*, size_t), void (*_free)(void*),
 	size_t elsize, size_t cap, uint64_t seed0, uint64_t seed1,
@@ -222,9 +229,27 @@ struct hashmap *hashmap_new_with_allocator(void *(*_malloc)(size_t),
  * cap：默认最小容量
  * seed0|seed1：可选的随机种子
  * hash：哈希生成函数
- * compare：哈希比较函数
- * elfree：element 释放函数
+ * compare：哈希比较函数，比较两个 item 在哈希冲突的时候是否相同
+ * elfree：element 的释放函数；对于复杂的结构体，成员变量指针指向的地址需要对应的释放
+ * 	   函数，如结构体内的成员结构体指针
  */
+// hashmap_new returns a new hash map.
+// Param `elsize` is the size of each element in the tree. Every element that
+// is inserted, deleted, or retrieved will be this size.
+// Param `cap` is the default lower capacity of the hashmap. Setting this to
+// zero will default to 16.
+// Params `seed0` and `seed1` are optional seed values that are passed to the
+// following `hash` function. These can be any value you wish but it's often
+// best to use randomly generated values.
+// Param `hash` is a function that generates a hash value for an item. It's
+// important that you provide a good hash function, otherwise it will perform
+// poorly or be vulnerable to Denial-of-service attacks. This implementation
+// comes with two helper functions `hashmap_sip()` and `hashmap_murmur()`.
+// Param `compare` is a function that compares items in the tree. See the
+// qsort stdlib function for an example of how this function works.
+// The hashmap must be freed with hashmap_free().
+// Param `elfree` is a function that frees a specific item. This should be NULL
+// unless you're storing some kind of reference data in the hash.
 struct hashmap *hashmap_new(size_t elsize, size_t cap, uint64_t seed0,
 	uint64_t seed1,
 	uint64_t (*hash)(const void *item, uint64_t seed0, uint64_t seed1),
@@ -248,6 +273,12 @@ static void free_elements(struct hashmap *map)
 }
 
 /** 清空|更新哈希表 */
+// hashmap_clear quickly clears the map.
+// Every item is called with the element-freeing function given in hashmap_new,
+// if present, to free any data referenced in the elements of the hashmap.
+// When the update_cap is provided, the map's capacity will be updated to match
+// the currently number of allocated buckets. This is an optimization to ensure
+// that this operation does not perform any allocations.
 void hashmap_clear(struct hashmap *map, bool update_cap)
 {
 	map->count = 0;
@@ -327,6 +358,9 @@ static bool resize(struct hashmap *map, size_t new_cap)
  * 使用指定 hash 值设置 item 的哈希值
  * item 的值在内部已经使用 memcpy 进行复制，因此，不需要对 item 本身进行 free
  * */
+// hashmap_set_with_hash works like hashmap_set but you provide your
+// own hash. The 'hash' callback provided to the hashmap_new function
+// will not be called
 const void *hashmap_set_with_hash(struct hashmap *map, const void *item,
 				  uint64_t hash)
 {
@@ -381,12 +415,28 @@ const void *hashmap_set_with_hash(struct hashmap *map, const void *item,
 	}
 }
 
-/** 设置 item 的哈希值 */
+/**
+ * @brief 设置 item 的哈希值
+ *
+ * item 的值在内部已经使用 memcpy 进行复制，因此，传入参数中 item 不一定是动态分配的
+ * 内存地址，可以是栈上的变量地址。因此，也需要对 item 本身进行 free。
+ *
+ * @param [in] map
+ * @param [in] item
+ * @return const void*, 若设置的 item 值在哈希表中已经存在，则返回之前的 item
+ */
+// hashmap_set inserts or replaces an item in the hash map. If an item is
+// replaced then it is returned otherwise NULL is returned. This operation
+// may allocate memory. If the system is unable to allocate additional
+// memory then NULL is returned and hashmap_oom() returns true.
 const void *hashmap_set(struct hashmap *map, const void *item)
 {
 	return hashmap_set_with_hash(map, item, get_hash(map, item));
 }
 
+// hashmap_get_with_hash works like hashmap_get but you provide your
+// own hash. The 'hash' callback provided to the hashmap_new function
+// will not be called
 const void *hashmap_get_with_hash(struct hashmap *map, const void *key,
 				  uint64_t hash)
 {
@@ -414,6 +464,9 @@ const void *hashmap_get(struct hashmap *map, const void *key)
 }
 
 /** 获取（探测）指定哈希位置对应的元素 */
+// hashmap_probe returns the item in the bucket at position or NULL if an item
+// is not set for that bucket. The position is 'moduloed' by the number of
+// buckets in the hashmap.
 const void *hashmap_probe(struct hashmap *map, uint64_t position)
 {
 	size_t i = position & map->mask;
@@ -425,6 +478,9 @@ const void *hashmap_probe(struct hashmap *map, uint64_t position)
 }
 
 /** 删除指定哈希值对应的元素 */
+// hashmap_delete_with_hash works like hashmap_delete but you provide your
+// own hash. The 'hash' callback provided to the hashmap_new function
+// will not be called
 const void *hashmap_delete_with_hash(struct hashmap *map, const void *key,
 				     uint64_t hash)
 {
@@ -470,6 +526,8 @@ const void *hashmap_delete_with_hash(struct hashmap *map, const void *key,
 }
 
 /** 删除 key 指定的元素 */
+// hashmap_delete removes an item from the hash map and returns it. If the
+// item is not found then NULL is returned.
 const void *hashmap_delete(struct hashmap *map, const void *key)
 {
 	return hashmap_delete_with_hash(map, key, get_hash(map, key));
@@ -500,6 +558,9 @@ bool hashmap_oom(struct hashmap *map)
  * 迭代器返回 0 （false） 则停止迭代
  * 正常结束返回 true, 提前结束返回 false
 */
+// hashmap_scan iterates over all items in the hash map
+// Param `iter` can return false to stop iteration early.
+// Returns false if the iteration has been stopped early.
 bool hashmap_scan(struct hashmap *map,
 		  bool (*iter)(const void *item, void *udata), void *udata)
 {
@@ -845,6 +906,27 @@ uint64_t hashmap_murmur(const void *data, size_t len, uint64_t seed0,
 	return MM86128(data, len, seed0);
 }
 
+/**
+ * @brief 使用内部 data 指向的地址内部长度为 len 的数据进行哈希值计算
+ *
+ * 注意：
+ * typedef struct car {
+ * 	int	id;
+ * 	char	name[64];
+ * 	int	band;
+ * 	int	price;
+ * } car_t;
+ *
+ * 对于上述结构体，若两个 id 相同的条目，其他任意成员变量有不同（如：price），哈希计算
+ * 的 len 值长度为 sizeof(car_t), 即整个结构体长度，则即使 id 相同，计算的哈希值也
+ * 不同，此处的哈希计算包含了整个结构体的特性，若两个结构体的内容完全相同，则哈希值相同。
+ *
+ * @param [in] data
+ * @param [in] len
+ * @param [in] seed0
+ * @param [in] seed1
+ * @return uint64_t 哈希值
+ */
 uint64_t hashmap_xxhash3(const void *data, size_t len, uint64_t seed0,
 			 uint64_t seed1)
 {

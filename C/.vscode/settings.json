@@ -4,6 +4,9 @@
     "errno.h": "c",
     "utils.h": "c",
     "sort_alg.h": "c",
-    "load_random.h": "c"
+    "load_random.h": "c",
+    "hashmap.h": "c",
+    "stdbool.h": "c",
+    "typeinfo": "c"
   }
 }
