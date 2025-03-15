@@ -20,8 +20,8 @@
  * Copyright (C) 2001-2017 Alexandre Cassen, <acassen@gmail.com>
  */
 
-#ifndef _LOGGER_H
-#define _LOGGER_H
+#ifndef LOGGER_H
+#define LOGGER_H
 
 #include <stdarg.h>
 #include <syslog.h>
@@ -59,4 +59,4 @@ extern void log_message(int priority, const char* format, ...)
 	__attribute__ ((format (printf, 2, 3)));
 extern void conf_write(FILE *fp, const char *format, ...)
 	__attribute__ ((format (printf, 2, 3)));
-#endif
+#endif /** LOGGER_H */

@@ -10,8 +10,8 @@
  * Copyright (c) 2024 by Alan Yin, All Rights Reserved.
  */
 
-#ifndef YSF_THREAD_POOL_H
-#define YSF_THREAD_POOL_H
+#ifndef THREAD_POOL_H
+#define THREAD_POOL_H
 
 /**
  * 线程池的三个要素：
@@ -62,4 +62,4 @@ int threadpool_dispath(threadpool_t *pool, void (*func)(void *), void *arg);
 void threadpool_destroy(threadpool_t *pool,
 			threadpool_showdown_t showdown_mode);
 
-#endif /** YSF_THREAD_POOL_H */
+#endif /** THREAD_POOL_H */

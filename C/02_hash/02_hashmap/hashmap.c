@@ -525,7 +525,17 @@ const void *hashmap_delete_with_hash(struct hashmap *map, const void *key,
 	}
 }
 
-/** 删除 key 指定的元素 */
+/**
+ * @brief 删除 key 指定的元素
+ * 该函数返回的 item 指针不需要使用 free 释放，因为该 item 指针地址为哈希表内的地址，
+ * 由哈希表自动维护，直接 free 会导致 coredump。该 item 在 delete 之后，在哈希表中会
+ * 标记为空闲，在函数调用 hashmap_free 的时候，会释放所有 item 对应的地址空间。
+ * 用户需要做的就是释放 item 结构中自定义分配的内存。
+ *
+ * @param [in] map
+ * @param [in] key
+ * @return const void*
+ */
 // hashmap_delete removes an item from the hash map and returns it. If the
 // item is not found then NULL is returned.
 const void *hashmap_delete(struct hashmap *map, const void *key)
@@ -539,7 +549,7 @@ size_t hashmap_count(struct hashmap *map)
 	return map->count;
 }
 
-/** 释放哈希 */
+/** 释放哈希表 */
 void hashmap_free(struct hashmap *map)
 {
 	if (!map) return;

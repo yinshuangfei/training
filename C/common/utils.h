@@ -14,6 +14,8 @@
 #define YSF_UTILS_H
 
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
 
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 

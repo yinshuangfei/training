@@ -7,6 +7,22 @@
     "load_random.h": "c",
     "hashmap.h": "c",
     "stdbool.h": "c",
-    "typeinfo": "c"
+    "typeinfo": "c",
+    "stdatomic.h": "c",
+    "threads.h": "c",
+    "stdlib.h": "c",
+    "pthread.h": "c",
+    "unistd.h": "c",
+    "mutex_queue.h": "c",
+    "random": "c",
+    "stdio.h": "c",
+    "array": "c",
+    "string": "c",
+    "string_view": "c",
+    "chrono": "c",
+    "logger.h": "c",
+    "bitops.h": "c",
+    "time.h": "c",
+    "signal.h": "c"
   }
 }

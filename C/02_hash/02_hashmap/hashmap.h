@@ -33,8 +33,8 @@
  * https://github.com/tidwall/hashmap.c
 */
 
-#ifndef YSF_HASHMAP_H
-#define YSF_HASHMAP_H
+#ifndef HASHMAP_H
+#define HASHMAP_H
 
 #include <stdbool.h>
 // #include <stddef.h>
@@ -100,4 +100,4 @@ void hashmap_set_allocator(void *(*malloc)(size_t), void (*free)(void*));
 }
 #endif  // __cplusplus
 
-#endif /** YSF_HASHMAP_H */
+#endif /** HASHMAP_H */
