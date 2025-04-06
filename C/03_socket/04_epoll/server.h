@@ -13,15 +13,13 @@
 #ifndef NAS_RPCSERVER_H
 #define NAS_RPCSERVER_H
 
-#include "cmd.h"
+typedef struct _client_t client_t;
+typedef struct _client_pool_t client_pool_t;
 
-void epoll_del_fd(int fd);
-
-int init_sock(int port);
+void init_client(client_t *client);
+void do_server_demo(client_t *client);
+ssize_t serv_fix_write(int fd, void *buf, size_t len);
 int init_server_epoll(int port);
-void recv_data(int efd, int client_fd);
-// static void switch_cmd(rpc_cmd_t *cmd);
-
-int main_server(void);
+int server_loop(void);
 
 #endif /** NAS_RPCSERVER_H */

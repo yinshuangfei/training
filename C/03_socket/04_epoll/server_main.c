@@ -24,9 +24,9 @@
 int SIGNAL_TERMINATE = 0;
 
 /**
- * @description: 设置信号句柄
- * @param {int} sign
- * @return {*}
+ * @brief 设置信号句柄
+ *
+ * @param [in] sig
  */
 static void dispatch_handler(int sig)
 {
@@ -53,8 +53,8 @@ static void dispatch_handler(int sig)
 }
 
 /**
- * @description: 初始化信号, Catch, ignore and handle signals
- * @return {*}
+ * @brief 初始化信号, Catch, ignore and handle signals
+ *
  */
 static void init_signal(void)
 {
@@ -62,7 +62,7 @@ static void init_signal(void)
 	signal(SIGCHLD, SIG_IGN);		/** 20 */
 	signal(SIGHUP, SIG_IGN);		/**  1 */
 
-	/** Broken pipe */
+	/** Broken pipe, 必须设置 */
 	signal(SIGPIPE, SIG_IGN);		/** 13 */
 
 	/** Implement a working signal handler */
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 	init_signal();
 
 	/** 运行任务 */
-	rc = main_server();
+	rc = server_loop();
 	if (rc) {
 		pr_err("%s exit with error (%d:%s)", cmd, -rc, strerror(-rc));
 	} else {

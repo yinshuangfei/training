@@ -23,6 +23,25 @@
     "logger.h": "c",
     "bitops.h": "c",
     "time.h": "c",
-    "signal.h": "c"
+    "signal.h": "c",
+    "lockfree_queue.h": "c",
+    "queue.h": "c",
+    "*.tcc": "c",
+    "memory": "c",
+    "istream": "c",
+    "functional": "c",
+    "tuple": "c",
+    "utility": "c",
+    "socket.h": "c",
+    "ip.h": "c",
+    "types.h": "c",
+    "features.h": "c",
+    "debug.h": "c",
+    "common.h": "c",
+    "cmd.h": "c",
+    "cli_xf.h": "c",
+    "stdint.h": "c",
+    "inet.h": "c",
+    "srv_xf.h": "c"
   }
 }

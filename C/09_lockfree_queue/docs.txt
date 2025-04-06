@@ -1,0 +1,28 @@
+Memory order
+
+typedef enum memory_order {
+    memory_order_relaxed,   // relaxed
+    memory_order_consume,   // consume
+    memory_order_acquire,   // acquire
+    memory_order_release,   // release
+    memory_order_acq_rel,   // acquire/release
+    memory_order_seq_cst    // sequentially consistent
+} memory_order;
+
+* memory_order_relaxed
+解释：放宽内存顺序，不对执行顺序做任何保证。原子操作可以被重排序，但是保证了原子性。
+
+* memory_order_consume
+解释：较弱的顺序保证。一个线程对原子对象的修改对于依赖于该原子对象的操作是可见的。在实践中，由于编译器优化的复杂性，memory_order_consume 往往被实现为 memory_order_acquire 的语义。
+
+* memory_order_acquire
+解释：获取操作，保证在此标记的原子操作之前的所有读写操作不会被重排序到原子操作之后。
+
+* memory_order_release
+解释：释放操作，保证在此标记的原子操作之后的所有读写操作不会被重排序到原子操作之前。
+
+* memory_order_acq_rel
+解释：同时具有获取和释放的语义，适用于读-修改-写操作，如 fetch_add。保证在此操作之前的读写操作不会被重排序到此操作之后，同时此操作之后的读写操作也不会被重排序到此操作之前。
+
+* memory_order_seq_cst
+解释：顺序一致性，提供最强的顺序保证。所有线程看到的操作顺序一致，保证了全局的操作顺序。这是默认的内存顺序，也是开销最大的内存顺序。

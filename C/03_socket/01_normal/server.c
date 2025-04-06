@@ -24,8 +24,6 @@
 
 #include "../common.h"
 
-#define MAX_DATASIZE 4096
-
 static int socket_init(void)
 {
 	int sock_fd = -1;
@@ -94,21 +92,24 @@ void msg_service(int client_fd)
 	int size;
 
 	while (1) {
+		/** 对端发送大量数据时，recv 会多次接收返回 */
 		size = recv(client_fd, buff, sizeof(buff), 0);
 		if (-1 == size) {
 			pr_err("socket receive error (%d:%s)", -errno,
 				strerror(errno));
 			exit(-errno);
-		}
-		/** 检测连接是否断开 */
-		else if (0 == size) {
+
+		} else if (0 == size) {
+			/** 检测连接是否断开 */
 			pr_info("the connect [%d] shutdown, now close the "
 				"connection.", client_fd);
 			break;
+
 		} else {
 			buff[size] = '\0';
-			pr_info("[Received ID:%d] content: %s", client_fd,
-				buff);
+
+			pr_info("[Received ID:%d] len:%d, content: %s",
+				client_fd, size, buff);
 
 			sprintf(resend_buff, "[Received ID:%d] recv content: "
 				"%.*s\n", client_fd, MAX_DATASIZE - 100, buff);

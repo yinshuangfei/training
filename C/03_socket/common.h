@@ -17,5 +17,6 @@
 #define MY_MAX_CONNECTED	20
 #define SERVER_PORT		12316
 #define SERVER_IP_ADDR		"127.0.0.1"
+#define MAX_DATASIZE		4096000
 
 #endif /** YSF_COMMON_H */

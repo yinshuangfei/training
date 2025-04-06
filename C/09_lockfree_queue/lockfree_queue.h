@@ -30,6 +30,20 @@
 #ifndef FREE_LOCK_QUEUE_H
 #define FREE_LOCK_QUEUE_H
 
+#include "queue.h"
 
+// /** 队列节点 */
+// typedef struct node {
+// 	void *data;
+// 	struct node *next;
+// } node_t;
+
+void init_lockfree_queue();
+void destroy_lockfree_queue();
+
+void *lockfree_queue_produce_func(void *arg);
+void *lockfree_queue_consume_func(void *arg);
+
+queue_ctr_t *get_lockfree_queue_ctr();
 
 #endif /** FREE_LOCK_QUEUE_H */

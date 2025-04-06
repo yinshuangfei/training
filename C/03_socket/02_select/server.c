@@ -25,8 +25,6 @@
 
 #include "../common.h"
 
-#define MAX_DATASIZE 4096
-
 struct param_t {
 	int fd;
 	fd_set *set;
@@ -92,31 +90,34 @@ void *msg_service(void *data)
 	char resend_buff[MAX_DATASIZE];
 	int size;
 
-	pr_info("new thread [%ld]", pthread_self());
+	pr_info("new thread [%ld], work on fd [%d]", pthread_self(), client_fd);
 
 	while (1) {
+		/** 对端发送大量数据时，recv 会多次接收返回 */
 		size = recv(client_fd, buff, sizeof(buff), 0);
 		if (-1 == size) {
-			pr_err("socket receive error (%d:%s)", -errno,
-				strerror(errno));
+			pr_stderr("[TID:%ld] socket receive error",
+				  pthread_self());
 			FD_CLR(client_fd, readfds);
 			break;
 		} else if (0 == size) {
-			pr_info("the connect [%d] shutdown, now close the "
-				"connection.", client_fd);
+			pr_info("[TID:%ld] the connect [%d] shutdown, now close the connection",
+				pthread_self(), client_fd);
 			FD_CLR(client_fd, readfds);
 			break;
 		} else {
 			buff[size] = '\0';
-			pr_info("[Received ID:%d] content: %s", client_fd,
-				buff);
+			pr_info("[TID:%ld] [Received ID:%d] len:%d, content: %s",
+				pthread_self(), client_fd, size, buff);
 
 			sprintf(resend_buff, "[Received ID:%d] recv content: "
 				"%.*s\n", client_fd, MAX_DATASIZE - 100, buff);
 
 			if (-1 == send(client_fd, resend_buff,
 				       strlen(resend_buff), 0)) {
-				pr_err("socket send error, try again");
+				pr_stderr("socket send error");
+				FD_CLR(client_fd, readfds);
+				break;
 			}
 		}
 	}
@@ -156,6 +157,9 @@ int main(void)
 	pthread_t tid;
 	struct param_t param;
 
+	/** Broken pipe, 必须设置 */
+	signal(SIGPIPE, SIG_IGN);		/** 13 */
+
 	sock_fd = socket_init();
 	if (sock_fd < 0) {
 		exit(sock_fd);
@@ -187,8 +191,8 @@ int main(void)
 		/**
 		 * 第一个参数 nfds 是一个整数值，是指集合中所有文件描述符的范围，即所
 		 * 有文件描述符的最大值加 1
-		 * 1. 当返回为-1时，所有描述符集清0。
-		 * 2. 当返回为0时，表示超时。
+		 * 1. 当返回为 -1 时，所有描述符集清0。
+		 * 2. 当返回为 0 时，表示超时。
 		 * 3. 当返回为正数时，表示已经准备好的描述符数。
 		 * */
 		rc = select(max_fd + 1, &readfds_temp, NULL, NULL, NULL);
@@ -198,6 +202,7 @@ int main(void)
 		}
 
 		for (i = 0; i < max_fd + 1 && rc > 0; i++) {
+
 			/** 检查对应 bit 为是否有效 */
 			if (FD_ISSET(i, &readfds_temp)) {
 				if (i == sock_fd) {
@@ -210,9 +215,8 @@ int main(void)
 					// 记录最大文件描述符
 					max_fd = max_fd > client_fd ?
 						 max_fd : client_fd;
-				}
-				/** 客户端发来消息 */
-				else {
+				} else {
+					/** 客户端发来消息 */
 					param.fd = i;
 					param.set = &readfds;
 
@@ -221,10 +225,7 @@ int main(void)
 							    msg_service,
 							    (void *)(&param));
 					if (rc < 0) {
-						pr_err("pthread create error "
-							"(%d:%s)",
-							-errno,
-							strerror(errno));
+						pr_stderr("pthread create error");
 					}
 				}
 			}

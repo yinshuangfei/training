@@ -29,10 +29,6 @@
  * https://blog.csdn.net/weixin_43757283/article/details/119185222
 */
 
-#define MAX_DATASIZE 4096
-
-#define ARRAY_SIZE(x)	(sizeof(x)/sizeof(x[0]))
-
 struct param_t {
 	int fd;
 	fd_set *set;
@@ -161,6 +157,9 @@ int main(void)
 	int max = 0;
 	struct param_t param;
 
+	/** Broken pipe, 必须设置 */
+	signal(SIGPIPE, SIG_IGN);		/** 13 */
+
 	/**
 	 * poll() 没有最大文件描述符数量的限制（但是数量过大后性能也是会下降）
 	 * poll() 和 select() 同样存在一个缺点就是，包含大量文件描述符的数组被整体复
@@ -192,15 +191,16 @@ int main(void)
 		 * 有文件描述符的最大值加 1；
 		 * timeout 指定为负数值表示无限超时；
 		 * timeout 为 0 指示 poll 调用立即返回并列出准备好 I/O 的文件描述符；
+		 *
 		 * 返回值如下：
 		 * 1. poll() 返回结构体中 revents 域不为0的文件描述符个数；
 		 * 2. 返回 0：说明在超时前没有任何事件发生；
 		 * 3. 返回 -1：说明失败，并设置errno为下列值之一：
-		 * EBADF：一个或多个结构体中指定的文件描述符无效。
-		 * EFAULT：指针指向的地址超出进程的地址空间。
-		 * EINTR：请求的事件之前产生一个信号，调用可以重新发起。
-		 * EINVAL：参数超出PLIMIT_NOFILE值。
-		 * ENOMEM：可用内存不足，无法完成请求。
+		 * 	EBADF：一个或多个结构体中指定的文件描述符无效。
+		 * 	EFAULT：指针指向的地址超出进程的地址空间。
+		 * 	EINTR：请求的事件之前产生一个信号，调用可以重新发起。
+		 * 	EINVAL：参数超出PLIMIT_NOFILE值。
+		 * 	ENOMEM：可用内存不足，无法完成请求。
 		 * */
 		rc = poll(fds_array, max + 1, -1);
 		if (rc == -1) {
@@ -241,9 +241,8 @@ int main(void)
 					"refuse", client_fd);
 				close(client_fd);
 			}
-		}
-		/** 客户端发来消息 */
-		else {
+		} else {
+			/** TODO: 客户端发来消息 */
 			// param.fd = i;
 			// param.set = &readfds;
 

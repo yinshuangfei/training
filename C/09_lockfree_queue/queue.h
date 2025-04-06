@@ -15,17 +15,11 @@
 
 #include <stdlib.h>
 
-typedef struct node {
-	struct node *next;
-	struct node *prev;
-	int data;
-} node_t;
-
-typedef struct queue {
-	struct node head;
+/** 队列控制结构 */
+typedef struct queue_ctr {
 	size_t count;
 	size_t total_enqueue;
 	int shutdown;		/** 消费者退出 */
-} queue_t;
+} queue_ctr_t;
 
 #endif /** LOCK_QUEUE_H */

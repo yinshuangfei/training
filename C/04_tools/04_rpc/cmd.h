@@ -15,8 +15,13 @@
 
 #include <netinet/in.h>
 
+#include <stdint.h>		// for uint64_t
+
 #define RPC_PORT		7689
 #define RPC_BUFF_MAX		8192
+
+#define PACKAGE_HEAD_LEN	sizeof(uint64_t)
+#define PACKAGE_MAGIC		0xe0e1e2e3
 
 enum {
 	RPC_CMD_WRITE_NODELIST = 0,

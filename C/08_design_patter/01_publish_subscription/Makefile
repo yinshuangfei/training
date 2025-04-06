@@ -20,7 +20,7 @@ CFLAGS = -Wall -D_FILE_OFFSET_BITS=64 -I./include -g
 CFLAGS += $(shell pkg-config --cflags ${DEPENDENCIES})
 LDFLAGS += $(shell pkg-config --libs ${DEPENDENCIES})
 
-CFLAGS = -D ENABLE_LOG_TO_FILE
+CFLAGS += -D ENABLE_LOG_TO_FILE
 
 # DO IT !!!
 all: $(PROGRAM_NAME)

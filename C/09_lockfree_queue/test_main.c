@@ -12,11 +12,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <pthread.h>
 
-// #include "lockfree_queue.h"
-#include "mutex_queue.h"
 #include "../common/utils.h"
+#include "lockfree_queue.h"
+#include "mutex_queue.h"
 
 size_t TOTAL_QUEUE_NODES = 0;
 size_t PRODUCE_THREADS = 0;
@@ -27,7 +28,7 @@ typedef void*(*produce_fn)(void *args);
 typedef void*(*consume_fn)(void *args);
 typedef void(*init_fn)();
 typedef void(*destroy_fn)();
-typedef queue_t*(*get_fn)();
+typedef queue_ctr_t*(*get_fn)();
 
 /** 队列函数指针描述结构体 */
 typedef struct _queue_fn {
@@ -35,20 +36,28 @@ typedef struct _queue_fn {
 	destroy_fn destroy;
 	produce_fn produce;
 	consume_fn consume;
-	get_fn get;
+	get_fn get_ctr;
 	char *name;
 } queue_fn;
 
 /** 队列函数指针集合 */
 const queue_fn queuefun_array[] = {
+	// {
+	// 	.init = init_mutex_queue,
+	// 	.destroy = destroy_mutex_queue,
+	// 	.produce = mutex_queue_produce_func,
+	// 	.consume = mutex_queue_consume_func,
+	// 	.get_ctr = get_mutex_queue_ctr,
+	// 	.name = "mutex_queue",
+	// },
 	{
-		.init = init_mutex_queue,
-		.destroy = destroy_mutex_queue,
-		.produce = mutex_queue_produce_func,
-		.consume = mutex_queue_consume_func,
-		.get = get_mutex_queue,
-		.name = "mutex_queue",
-	},
+		.init = init_lockfree_queue,
+		.destroy = destroy_lockfree_queue,
+		.produce = lockfree_queue_produce_func,
+		.consume = lockfree_queue_consume_func,
+		.get_ctr = get_lockfree_queue_ctr,
+		.name = "lockfree_queue",
+	}
 };
 
 void print_help(const char *name)
@@ -131,18 +140,18 @@ int main(int argc, char *argv[])
 		}
 
 		pr_info("total time spend [ seconds: %ld, nanoseconds: %ld ]\n"
-			"\tname         : %s\n"
-			"\tproduce      : %d\n"
-			"\tconsume      : %d\n"
-			"\ttotal enqueue: %ld\n"
-			"\tleft count   : %d",
+			"\tname          : %s\n"
+			"\tproduce       : %d\n"
+			"\tconsume       : %d\n"
+			"\ttotal enqueue : %ld\n"
+			"\tleft count    : %d",
 			diff_tp.tv_sec,
 			diff_tp.tv_nsec,
 			queuefun_array[q_i].name,
 			PRODUCE_THREADS,
 			CONSUME_THREADS,
-			queuefun_array[q_i].get()->total_enqueue,
-			queuefun_array[q_i].get()->count);
+			queuefun_array[q_i].get_ctr()->total_enqueue,
+			queuefun_array[q_i].get_ctr()->count);
 
 		queuefun_array[q_i].destroy();
 	}
