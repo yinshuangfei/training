@@ -85,7 +85,7 @@ static client_t *find_client(int fd)
  *
  * @param [in] fd
  * @param [in] addr
- * @return int 0: success, <0: failed, posix errno; >0: other success, value;
+ * @return int 0: success, <0: failed, posix errno;
  */
 static int add_client(int fd, struct sockaddr_in addr)
 {
@@ -180,7 +180,7 @@ static int set_socket_nonblocking(int sockfd)
  * @brief 初始化套接字
  *
  * @param [in] port
- * @return int 0: success; <0: failed, posix errno; >0: other success, value;
+ * @return int 0: success; <0: failed, posix errno;
  */
 static int init_sock(int port)
 {
@@ -507,11 +507,8 @@ int server_loop(void)
 	pthread_mutex_init(&client_pool.mutex, NULL);
 
 	rc = init_server_epoll(SERVER_PORT);
-	if (rc)
-		return rc;
 
 	/** 销毁用户池 */
 	pthread_mutex_destroy(&client_pool.mutex);
-
-	return 0;
+	return rc;
 }

@@ -195,7 +195,11 @@ void daemonize(const char *cmd, void(*init_signal)(void))
 
 	/**
 	 * Attach file descriptors 0, 1, and 2 to /dev/null.
+	 * 这里不需要关闭 fd.
+	 * 需要特别注意，当使用套接字时，关闭 0|1|2 文件描述符，套接字使用 0|1|2
+	 * 文件描述符，会导致在 sprintf(stderr, ...) 时将输出内容误发送到套接字上。
 	 */
+
 	fd0 = open("/dev/null", O_RDWR);
 	fd1 = dup(0);
 	fd2 = dup(0);

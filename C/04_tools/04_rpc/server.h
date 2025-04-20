@@ -19,7 +19,7 @@ void epoll_del_fd(int fd);
 
 int init_sock(int port);
 int init_server_epoll(int port);
-void recv_data(int efd, int client_fd);
+void epoll_recv(int efd, int client_fd);
 // static void switch_cmd(rpc_cmd_t *cmd);
 
 int main_server(void);

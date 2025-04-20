@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
 
 	pr_info("Successfully connected to the server at %s:%d from local IP %s",
 		server_ip, server_port, local_ip);
-	pr_info("client PID is: %d", getpid());
+	pr_info("Client PID is: %d", getpid());
 
 	// interactive_mode(sock_fd);
 	loop_mode(sock_fd);

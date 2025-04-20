@@ -83,6 +83,53 @@ ssize_t serv_tcp_write(int fd, void *buf, size_t len)
 }
 
 /**
+ * @brief 发送定长数据
+ *
+ * @param [in] fd
+ * @param [in] buf
+ * @param [in] len
+ * @return ssize_t 0: success; <0: failed, posix errno;
+ */
+ssize_t serv_fix_write(int fd, void *buf, size_t len)
+{
+	int rc = 0;
+	size_t iolen = 0;
+	int max_retry = 30;
+	int cnt = 1;
+
+	while (iolen < len) {
+		rc = write(fd, buf + iolen, (size_t)(len - iolen));
+		if (rc < 0) {
+			if (errno == EAGAIN ||
+			    errno == EWOULDBLOCK ||
+			    errno == EINTR) {
+
+				/** 客户端没有把数据取走 */
+				if (cnt <= max_retry) {
+					pr_info("buff no space left, retry [%d/%d]",
+						cnt, max_retry);
+					cnt++;
+					/** 等待 10 ms */
+					usleep(10000);
+					continue;
+				} else {
+					pr_err("buff no space left, reached max retry [%d]",
+						max_retry);
+					return -errno;
+				}
+
+			} else {
+				/** 这里表示客户端异常断开，退出 */
+				pr_stderr("write [%d] with error", fd);
+				return -errno;
+			}
+		}
+		iolen += rc;
+	}
+	return 0;
+}
+
+/**
  * @description: 服务端调用
  * @param {int} fd
  * @param {void} *
