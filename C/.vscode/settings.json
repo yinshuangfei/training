@@ -45,6 +45,8 @@
     "srv_xf.h": "c",
     "netdb.h": "c",
     "iniparser.h": "c",
-    "inttypes.h": "c"
+    "inttypes.h": "c",
+    "log.h": "c",
+    "syslog.h": "c"
   }
 }
