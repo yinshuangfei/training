@@ -5,7 +5,7 @@ NJOBS = 2
 PROGRAM_NAME = main
 
 CC = gcc
-CFLAGS = -D_FILE_OFFSET_BITS=64 -I./include -g
+CFLAGS = -I./include -g
 CFLAGS += $(shell pkg-config --cflags ${DEPENDENCIES})
 
 PROGRAM_SRCS = main.o

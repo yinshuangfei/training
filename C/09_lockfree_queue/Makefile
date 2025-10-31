@@ -11,7 +11,7 @@ COMM_OBJS := $(COMM_SRCS:%.c=%.o)
 COMM_OBJS := $(foreach i,$(COMM_OBJS),$(COMMON)/$(i))
 
 CC = gcc
-CFLAGS = -D_FILE_OFFSET_BITS=64 -I./include -g
+CFLAGS = -I./include -g
 CFLAGS += $(shell pkg-config --cflags ${DEPENDENCIES})
 
 LDFLAGS += $(shell pkg-config --libs ${DEPENDENCIES}) -lpthread

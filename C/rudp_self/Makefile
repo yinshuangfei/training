@@ -1,7 +1,7 @@
 DEPENDENCIES = glib-2.0
 
 CC = gcc
-CFLAGS = -D_FILE_OFFSET_BITS=64 -I./include 
+CFLAGS = -I./include
 CFLAGS += $(shell pkg-config --cflags ${DEPENDENCIES})
 
 # LDFLAGS += $(shell pkg-config --libs ${DEPENDENCIES}) -lenet -pthread -levent
@@ -12,7 +12,7 @@ all: clean server client
 	./server
 
 server: server.o test_server.o protocol.o list.o ring_buffer.o
-	$(CC) -o $@ $^ $(LDFLAGS) 
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 client: client.o test_client.o protocol.o list.o ring_buffer.o
 	$(CC) -o $@ $^ $(LDFLAGS)

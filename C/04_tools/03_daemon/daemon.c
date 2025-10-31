@@ -190,6 +190,8 @@ void daemonize(const char *cmd, void(*init_signal)(void))
 	 */
 	if (rl.rlim_max == RLIM_INFINITY)
 		rl.rlim_max = 1024;
+
+	/** 这里可能关闭了之前打开的描述符，例如 syslog 打开的套接字描述符 */
 	for (i = 0; i < rl.rlim_max; i++)
 		close(i);
 

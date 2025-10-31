@@ -47,6 +47,12 @@
     "iniparser.h": "c",
     "inttypes.h": "c",
     "log.h": "c",
-    "syslog.h": "c"
+    "syslog.h": "c",
+    "multicast.h": "c",
+    "comm.h": "c",
+    "string.h": "c",
+    "algorithm": "cpp",
+    "aio.h": "c",
+    "fcntl.h": "c"
   }
 }

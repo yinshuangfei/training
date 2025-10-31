@@ -1,7 +1,7 @@
 DEPENDENCIES = glib-2.0
 
 CC = gcc
-CFLAGS = -Wall -D_FILE_OFFSET_BITS=64 -I./include -g
+CFLAGS = -Wall -I./include -g
 CFLAGS += $(shell pkg-config --cflags ${DEPENDENCIES})
 LDFLAGS += $(shell pkg-config --libs ${DEPENDENCIES})
 
