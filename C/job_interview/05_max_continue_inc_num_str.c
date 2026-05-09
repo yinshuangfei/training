@@ -60,7 +60,7 @@ int longestIncreasingDigits(const char* str)
 	int dp[n];
 
 	/** 使用动态规划思想，记录每个位置的最长递增数字串长度 */
-	for(int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) {
 		dp[i] = 1;
 	}
 

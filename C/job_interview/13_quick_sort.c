@@ -26,10 +26,35 @@ void swap(int* a, int* b)
 }
 
 /**
+ * @brief 分区函数,哨兵划分（核心逻辑）
+ *
+ */
+int partition(int nums[], int left, int right)
+{
+	// 以 nums[left] 为基准数
+	int i = left, j = right;
+	while (i < j) {
+		while (i < j && nums[j] >= nums[left]) {
+			j--; // 从右向左找首个小于基准数的元素
+		}
+		while (i < j && nums[i] <= nums[left]) {
+			i++; // 从左向右找首个大于基准数的元素
+		}
+		//交换这两个元素
+		swap(&arr[i], &arr[j]);
+	}
+
+	// 将基准数交换至两子数组的分界线
+	swap(&arr[i], &arr[left]);
+	// 返回基准数的索引
+	return i;
+}
+
+/**
  * @brief 分区函数（核心逻辑）
  *
  */
-int partition(int arr[], int low, int high)
+int partition_2(int arr[], int low, int high)
 {
 	int pivot = arr[high];  // 选择最右侧元素作为基准
 	int i = (low - 1);      // 小于基准的元素的边界索引
@@ -69,14 +94,16 @@ int partition(int arr[], int low, int high)
  */
 void quickSort(int arr[], int low, int high)
 {
-	if (low < high) {
-		/** pi是分区索引，arr[pi]现在在正确位置 */
-		int pi = partition(arr, low, high);
-
-		/** 递归排序分区 */
-		quickSort(arr, low, pi - 1);   // 左子数组
-		quickSort(arr, pi + 1, high);  // 右子数组
+	if (low >= high) {
+		return;
 	}
+
+	/** pi是分区索引，arr[pi]现在在正确位置 */
+	int pi = partition(arr, low, high);
+
+	/** 递归排序分区 */
+	quickSort(arr, low, pi - 1);   // 左子数组
+	quickSort(arr, pi + 1, high);  // 右子数组
 }
 
 int main(void)

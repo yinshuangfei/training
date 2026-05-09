@@ -26,6 +26,9 @@
  * https://blog.csdn.net/hlx20080808/article/details/139079942
  * https://zhuanlan.zhihu.com/p/23737526562
  *
+ * 哨兵节点（Dummy Head/Tail）：
+ * 在双向链表中引入伪头部和伪尾部，可以极大简化链表在空、满或头尾插入/删除时的边界判断
+ * 逻辑，面试官会认为你的代码非常健壮。
  */
 
 #include <stdio.h>
