@@ -35,6 +35,40 @@ int maxSubArray_dp(int *nums, int numsSize)
 	return max_sum;
 }
 
+
+int max(int a, int b)
+{
+	return a >= b ? a : b;
+}
+
+/**
+ * @brief 动态规划解法 (显式状态转移方程)
+ *
+ * @param [in] a
+ * @param [in] b
+ * @return int
+ */
+int maxSubArray_dp2(int arr[], int len)
+{
+	if (arr == NULL || len == 0) {
+		return 0;
+	}
+	
+	int mymax = arr[0];
+	int dp = arr[0];
+	
+	for (int i = 1; i < len; i++) {
+		// 状态转移方程：dp[i] = max(arr[i], dp[i-1] + arr[i])
+		dp = max(arr[i], dp + arr[i]);
+		
+		if (dp > mymax) {
+			mymax = dp;
+		}
+	}
+	
+	return  mymax;
+}
+
 /**
  * @brief 贪心算法解法
  *

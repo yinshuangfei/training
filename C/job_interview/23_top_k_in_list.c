@@ -1,5 +1,5 @@
 /**
- * @file 23_top_m_num.c
+ * @file 23_top_k_in_list.c
  * @author Alan Yin (yinshuangfei007@163.com)
  * @brief
  * @version 0.0.1
@@ -71,7 +71,7 @@ void heapify_sort(num_freq *arr, int n)
 	}
 }
 
-void print_top_m_num(int *arr, int len, int m)
+void top_m_num(int *arr, int len, int m)
 {
 	if (arr == NULL || len == 0) {
 		return;
@@ -118,5 +118,5 @@ int main()
 	int arr[] = {1,1,2,2,2,3,4,4,4,4,4,5,6,6,6,6,6,6,7,8,8,9};
 	int n = sizeof(arr) / sizeof(arr[0]);
 
-	print_top_m_num(arr, n, 3);
+	top_m_num(arr, n, 3);
 }

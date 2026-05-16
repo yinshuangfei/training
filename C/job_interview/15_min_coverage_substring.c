@@ -139,7 +139,7 @@ char *minWindow(char *s, char *t)
 		char c = s[right];
 		windowCount[c]++;
 
-		// 如果当前字符在t中，且窗口中的数量不超过t中的数量
+		// 如果当前字符在 t 中，且窗口中的数量不超过 t 中的数量
 		if (tCount[c] > 0 && windowCount[c] <= tCount[c]) {
 			formed++;
 		}
@@ -152,10 +152,10 @@ char *minWindow(char *s, char *t)
 				minLeft = left;
 			}
 
-			char sss[1024] = {0};
-			snprintf(sss, right - left + 2, "%s", s + left);
-			printf("required:%d, formed:%d, left:%d, right:%d, minLeft:%d, %s\n",
-				required, formed, left, right, minLeft, sss);
+			// char sss[1024] = {0};
+			// snprintf(sss, right - left + 2, "%s", s + left);
+			// printf("required:%d, formed:%d, left:%d, right:%d, minLeft:%d, %s\n",
+			// 	required, formed, left, right, minLeft, sss);
 
 			char leftChar = s[left];
 			windowCount[leftChar]--;
@@ -167,6 +167,7 @@ char *minWindow(char *s, char *t)
 			}
 			left++;
 		}
+
 		right++;
 	}
 

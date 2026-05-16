@@ -1,5 +1,5 @@
 /**
- * @file 16_has_path_sum.c
+ * @file 16_tree_path_has_sum_target.c
  * @author Alan Yin (yinshuangfei007@163.com)
  * @brief
  * @version 0.0.1

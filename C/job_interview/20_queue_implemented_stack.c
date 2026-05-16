@@ -20,15 +20,6 @@
 
 #define MAX_SIZE 100
 
-// typedef struct _queue {
-
-// } queue_t;
-
-// typedef struct _stack {
-// 	queue_t *q1;
-// 	queue_t *q2;
-// } stack_t;
-
 typedef struct {
     int data[MAX_SIZE];
     int front;

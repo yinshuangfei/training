@@ -35,27 +35,39 @@
 #include <stdlib.h>
 #include <string.h>
 
-// 双向链表节点
+/**
+ * @brief 双向链表节点结构
+ *
+ */
 typedef struct DLinkedNode {
 	int key;
 	int value;
-	struct DLinkedNode* prev;
-	struct DLinkedNode* next;
+	struct DLinkedNode *prev;
+	struct DLinkedNode *next;
 } DLinkedNode;
 
-// LRU缓存结构
+/**
+ * @brief LRU缓存结构
+ *
+ */
 typedef struct {
 	int capacity;
 	int size;
-	DLinkedNode* head;  // 伪头部节点
-	DLinkedNode* tail;  // 伪尾部节点
-	DLinkedNode** cache; // 哈希表
+	DLinkedNode *head;  // 伪头部节点
+	DLinkedNode *tail;  // 伪尾部节点
+	DLinkedNode **cache; // 哈希表
 } LRUCache;
 
-// 创建新节点
-DLinkedNode* createNode(int key, int value)
+/**
+ * @brief 创建新节点
+ *
+ * @param [in out] key
+ * @param [in out] value
+ * @return
+ */
+DLinkedNode *create_node(int key, int value)
 {
-	DLinkedNode* node = (DLinkedNode*)malloc(sizeof(DLinkedNode));
+	DLinkedNode *node = (DLinkedNode*)malloc(sizeof(DLinkedNode));
 	node->key = key;
 	node->value = value;
 	node->prev = NULL;
@@ -63,79 +75,123 @@ DLinkedNode* createNode(int key, int value)
 	return node;
 }
 
-// 初始化LRU缓存
-LRUCache* lRUCacheCreate(int capacity)
+/**
+ * @brief 初始化 LRU 缓存
+ *
+ * @param [in out] capacity
+ * @return
+ */
+LRUCache *create_lru(int capacity)
 {
-	LRUCache* obj = (LRUCache*)malloc(sizeof(LRUCache));
+	LRUCache *obj = (LRUCache*)malloc(sizeof(LRUCache));
 	obj->capacity = capacity;
 	obj->size = 0;
-	obj->head = createNode(0, 0);
-	obj->tail = createNode(0, 0);
+	obj->head = create_node(0, 0);
+	obj->tail = create_node(0, 0);
 	obj->head->next = obj->tail;
 	obj->tail->prev = obj->head;
 
-	// 初始化哈希表（简单起见，使用数组实现，实际应用中可能需要更复杂的哈希表）
+	/**
+	 * 初始化哈希表（简单起见，使用数组实现，实际应用中需要更复杂的哈希表）
+	 */
 	obj->cache = (DLinkedNode**)calloc(10000, sizeof(DLinkedNode*));
 	return obj;
 }
 
-// 添加节点到头部
-void addToHead(LRUCache* obj, DLinkedNode* node) {
+/**
+ * @brief 添加节点到头部
+ *
+ * @param [in out] obj
+ * @param [in out] node
+ */
+void add_to_head(LRUCache *obj, DLinkedNode *node)
+{
 	node->prev = obj->head;
 	node->next = obj->head->next;
 	obj->head->next->prev = node;
 	obj->head->next = node;
 }
 
-// 移除节点
-void removeNode(DLinkedNode* node) {
+/**
+ * @brief 移除节点
+ *
+ * @param [in out] node
+ */
+void remove_node(DLinkedNode *node)
+{
 	node->prev->next = node->next;
 	node->next->prev = node->prev;
 }
 
-// 移动节点到头部
-void moveToHead(LRUCache* obj, DLinkedNode* node) {
-	removeNode(node);
-	addToHead(obj, node);
+/**
+ * @brief 移动节点到头部
+ *
+ * @param [in out] obj
+ * @param [in out] node
+ */
+void move_to_head(LRUCache *obj, DLinkedNode *node)
+{
+	remove_node(node);
+	add_to_head(obj, node);
 }
 
-// 移除尾部节点
-DLinkedNode* removeTail(LRUCache* obj) {
-	DLinkedNode* node = obj->tail->prev;
-	removeNode(node);
+/**
+ * @brief 移除尾部节点
+ *
+ * @param [in out] obj
+ * @return
+ */
+DLinkedNode *remove_tail(LRUCache *obj)
+{
+	DLinkedNode *node = obj->tail->prev;
+	remove_node(node);
 	return node;
 }
 
-// 获取值
-int lRUCacheGet(LRUCache* obj, int key) {
+/**
+ * @brief 获取值
+ *
+ * @param [in out] obj
+ * @param [in out] key
+ * @return
+ */
+int get(LRUCache *obj, int key)
+{
 	if (obj->cache[key] == NULL) {
 		return -1;
 	}
 
 	// 如果key存在，先通过哈希表定位，再移到头部
-	DLinkedNode* node = obj->cache[key];
-	moveToHead(obj, node);
+	DLinkedNode *node = obj->cache[key];
+	move_to_head(obj, node);
 	return node->value;
 }
 
-// 插入或更新值
-void lRUCachePut(LRUCache* obj, int key, int value) {
+/**
+ * @brief 插入或更新值
+ *
+ * @param [in out] obj
+ * @param [in out] key
+ * @param [in out] value
+ */
+void put(LRUCache *obj, int key, int value)
+{
 	if (obj->cache[key] != NULL) {
 		// 如果key存在，先通过哈希表定位，再修改value，并移到头部
-		DLinkedNode* node = obj->cache[key];
+		DLinkedNode *node = obj->cache[key];
 		node->value = value;
-		moveToHead(obj, node);
+		move_to_head(obj, node);
 	} else {
 		// 如果key不存在，创建一个新的节点
-		DLinkedNode* node = createNode(key, value);
+		DLinkedNode *node = create_node(key, value);
 		// 添加进哈希表
 		obj->cache[key] = node;
 		// 添加至双向链表的头部
-		addToHead(obj, node);
+		add_to_head(obj, node);
 		obj->size++;
 		if (obj->size > obj->capacity) {
 			// 如果超出容量，删除双向链表的尾部节点
-			DLinkedNode* removed = removeTail(obj);
+			DLinkedNode *removed = remove_tail(obj);
 			// 删除哈希表中对应的项
 			obj->cache[removed->key] = NULL;
 			free(removed);
@@ -144,11 +200,16 @@ void lRUCachePut(LRUCache* obj, int key, int value) {
 	}
 }
 
-// 释放LRU缓存
-void lRUCacheFree(LRUCache* obj) {
-	DLinkedNode* curr = obj->head->next;
+/**
+ * @brief 释放 LRU 缓存
+ *
+ * @param [in out] obj
+ */
+void free_lru(LRUCache *obj)
+{
+	DLinkedNode *curr = obj->head->next;
 	while (curr != obj->tail) {
-		DLinkedNode* temp = curr;
+		DLinkedNode *temp = curr;
 		curr = curr->next;
 		free(temp);
 	}
@@ -158,26 +219,46 @@ void lRUCacheFree(LRUCache* obj) {
 	free(obj);
 }
 
-int main() {
-	LRUCache* cache = lRUCacheCreate(100);
+/**
+ * @brief 打印 LRU 缓存
+ *
+ * @param [in out] obj
+ */
+void print_cache(LRUCache *obj)
+{
+	DLinkedNode *curr = obj->head->next;
+	while (curr != obj->tail) {
+		printf("(%d, %d) -> ", curr->key, curr->value);
+		curr = curr->next;
+	}
+	printf("NULL\n");
+}
 
-	lRUCachePut(cache, 1, 1);
-	lRUCachePut(cache, 2, 2);
-	lRUCachePut(cache, 3, 3);
-	lRUCachePut(cache, 4, 4);
-	lRUCachePut(cache, 5, 5);
-	lRUCachePut(cache, 6, 6);
-	// printf("%d\n", lRUCacheGet(cache, 1)); // 返回 1
-	// lRUCachePut(cache, 3, 3);             // 该操作会使得关键字 2 作废
-	// printf("%d\n", lRUCacheGet(cache, 2)); // 返回 -1 (未找到)
-	// lRUCachePut(cache, 4, 4);             // 该操作会使得关键字 1 作废
-	// printf("%d\n", lRUCacheGet(cache, 1)); // 返回 -1 (未找到)
-	// printf("%d\n", lRUCacheGet(cache, 3)); // 返回 3
-	// printf("%d\n", lRUCacheGet(cache, 4)); // 返回 4
+int main()
+{
+	LRUCache *cache = create_lru(5);
 
-	printf("tail %d\n", cache->tail->prev->key);
+	put(cache, 1, 1);
+	put(cache, 2, 2);
+	put(cache, 3, 3);
+	put(cache, 4, 4);
+	put(cache, 5, 5);
+	put(cache, 6, 6);
 
-	lRUCacheFree(cache);
+	/** 打印 */
+	print_cache(cache);
+
+	/** 获取值 */
+	printf("get key:%d -> value: %d\n", 2, get(cache, 2));
+	/** 更新值 */
+	put(cache, 3, 13);
+	/** 获取值 */
+	printf("get key:%d -> value: %d\n", 12, get(cache, 12));
+
+	/** 打印 */
+	print_cache(cache);
+
+	free_lru(cache);
 	return 0;
 }
 

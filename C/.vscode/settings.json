@@ -54,5 +54,6 @@
     "algorithm": "cpp",
     "aio.h": "c",
     "fcntl.h": "c"
-  }
+  },
+  "cmake.sourceDirectory": "D:/Code/training/C/04_tools/01_cmake_build_rpm"
 }

@@ -18,7 +18,7 @@ COMM_OBJS := $(foreach i,$(COMM_OBJS),$(COMMON)/$(i))
 CC = gcc
 CFLAGS = -Wall -I./include -g
 CFLAGS += $(shell pkg-config --cflags ${DEPENDENCIES})
-LDFLAGS += $(shell pkg-config --libs ${DEPENDENCIES})
+LDFLAGS += $(shell pkg-config --libs ${DEPENDENCIES}) -lpthread
 
 CFLAGS += -D ENABLE_LOG_TO_FILE
 

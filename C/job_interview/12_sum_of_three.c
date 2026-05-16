@@ -37,7 +37,8 @@ int compare(const void* a, const void* b)
 void threeSum(int* nums, int numsSize, int** result, int* returnSize)
 {
 	/**
-	 * 先排序数组
+	 * ！！！关键 ！！！
+	 * 先排序数组，然后使用双指针法
 	 * C语言标准库中的qsort函数使用的是‌快速排序算法
 	 **/
 	qsort(nums, numsSize, sizeof(int), compare);
